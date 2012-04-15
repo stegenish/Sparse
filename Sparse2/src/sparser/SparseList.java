@@ -200,7 +200,7 @@ public class SparseList implements Entity, Iterable<Entity> {
 	    }
 
 	    public Entity execute(Scope scope) {
-	        Function fun = getFunction(scope);
+	        Callable fun = getFunction(scope);
 	        ArgumentList args = createArgumentList();
 	        return fun.callWithScope(args, scope);
 	    }
@@ -215,10 +215,10 @@ public class SparseList implements Entity, Iterable<Entity> {
 			return args;
 		}
 
-		private Function getFunction(Scope scope) {
-			Function fun;
+		private Callable getFunction(Scope scope) {
+			Callable fun;
 	        try {
-	            fun = (Function)(getElement().execute(scope));
+	            fun = (Callable)(getElement().execute(scope));
 	            if(fun == null) {
 	            	throw new FunctionCallException("No function bound to " + getElement().toString());
 	            }

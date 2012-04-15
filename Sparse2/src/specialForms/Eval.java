@@ -1,15 +1,14 @@
 package specialForms;
 
 import sparser.ArgumentList;
-import sparser.ArgumentReturningProcessor;
 import sparser.Entity;
-import sparser.Function;
 import sparser.Scope;
+import sparser.SpecialForm;
 
-public class Eval extends Function {
+public class Eval extends SpecialForm {
 
 	public Eval() {
-		super("eval", new ArgumentReturningProcessor());
+		super("eval");
 	}
 
 	@Override

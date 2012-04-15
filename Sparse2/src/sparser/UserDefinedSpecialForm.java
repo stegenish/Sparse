@@ -1,21 +1,19 @@
 package sparser;
 
-public class UserDefinedSpecialForm extends Function {
+public class UserDefinedSpecialForm extends SpecialForm {
+	
 	private FunctionBody functionBody;
 
-	public UserDefinedSpecialForm(String name, SparseList parameters, Code code) {
-		super(name, new ArgumentReturningProcessor());		
+	public UserDefinedSpecialForm(String name, SparseList parameters, Code code, ShadowScopeSemantics scopeSemantics) {
+		super(name);
 		functionBody = new FunctionBody(code, parameters);
+		this.scopeSemantics = scopeSemantics;
 	}
 
 	@Override
 	public Entity callImplementation(ArgumentList args, Scope scope) {
-		Scope localScope = createNewScope(scope);
+		Scope localScope = scopeSemantics.createNewScope(scope);
 		return functionBody.callBody(args, localScope);
-	}
-
-	private static Scope createNewScope(Scope scope) {
-		return scope.createShadowScope();
 	}
 
 	public String getName() {

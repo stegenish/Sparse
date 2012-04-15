@@ -8,7 +8,6 @@ package sparser.builtins;
 
 import java.math.BigInteger;
 
-import sparser.ArgumentEvaluatingProcessor;
 import sparser.ArgumentList;
 import sparser.Entity;
 import sparser.Function;
@@ -22,7 +21,7 @@ import sparser.SparseInt;
 public class Add extends Function
 {
     public Add() {
-    	super("add", new ArgumentEvaluatingProcessor());
+    	super("add");
     }
 
     public Entity callImplementation(ArgumentList args, Scope scope)

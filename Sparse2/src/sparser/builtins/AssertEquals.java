@@ -1,6 +1,5 @@
 package sparser.builtins;
 
-import sparser.ArgumentEvaluatingProcessor;
 import sparser.ArgumentList;
 import sparser.Entity;
 import sparser.Function;
@@ -10,7 +9,7 @@ import sparser.SparseString;
 public class AssertEquals extends Function {
 
 	public AssertEquals() {
-		super("assert", new ArgumentEvaluatingProcessor());
+		super("assert");
 	}
 
 	public Entity callImplementation(ArgumentList args, Scope scope) {

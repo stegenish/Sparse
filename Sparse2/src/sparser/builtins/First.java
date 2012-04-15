@@ -1,6 +1,5 @@
 package sparser.builtins;
 
-import sparser.ArgumentEvaluatingProcessor;
 import sparser.ArgumentList;
 import sparser.Entity;
 import sparser.Function;
@@ -10,7 +9,7 @@ import sparser.SparseList;
 public class First extends Function {
 
 	public First() {
-		super("first", new ArgumentEvaluatingProcessor());
+		super("first");
 	}
 
 	protected Entity callImplementation(ArgumentList args, Scope scope) {

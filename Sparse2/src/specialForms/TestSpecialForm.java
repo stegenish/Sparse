@@ -4,15 +4,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 import sparser.ArgumentList;
-import sparser.ArgumentReturningProcessor;
 import sparser.Entity;
-import sparser.Function;
 import sparser.Scope;
+import sparser.SpecialForm;
 
-public class TestSpecialForm extends Function {
+public class TestSpecialForm extends SpecialForm {
 
 	public TestSpecialForm() {
-		super("TestSpecialForm", new ArgumentReturningProcessor());
+		super("TestSpecialForm");
 	}
 
 	public ArgumentList lastCallArgs = null;

@@ -1,26 +1,27 @@
 package specialForms;
 
 import sparser.ArgumentList;
-import sparser.ArgumentReturningProcessor;
 import sparser.Code;
 import sparser.Entity;
-import sparser.Function;
+import sparser.Callable;
+import sparser.FunctionScopeSemantics;
 import sparser.Scope;
 import sparser.SparseList;
+import sparser.SpecialForm;
 import sparser.Symbol;
 import sparser.UserDefinedFunction;
 
-public class Defun extends Function {
+public class Defun extends SpecialForm {
 
 	public Defun() {
-		super("defun", new ArgumentReturningProcessor());
+		super("defun");
 	}
 
 	public Entity callImplementation(ArgumentList args, Scope scope) {
 		Symbol name = (Symbol) args.next();
 		SparseList params = (SparseList) args.next();
 		Code code = createCode(args);
-		UserDefinedFunction userDefinedFunction = new UserDefinedFunction(name.toString(), params, code);
+		Callable userDefinedFunction = new UserDefinedFunction(name.toString(), params, code, new FunctionScopeSemantics());
 		scope.bind(name, userDefinedFunction);
 		return userDefinedFunction;
 	}

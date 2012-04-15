@@ -4,7 +4,7 @@ import java.math.BigInteger;
 
 import sparser.ArgumentList;
 import sparser.Entity;
-import sparser.Function;
+import sparser.Callable;
 import sparser.SparseInt;
 import sparser.SparserTestCase;
 
@@ -15,7 +15,7 @@ public class MultiplyTest extends SparserTestCase {
 	}
 
 	public void testOneNumberOne() {
-		Function fun = new Multiply();
+		Callable fun = new Multiply();
 		ArgumentList args = ArgumentList.createArgumentList();
 		args.addArg(SparseInt.valueOf(1));
 		Entity call = fun.callWithScope(args, scope);
@@ -23,7 +23,7 @@ public class MultiplyTest extends SparserTestCase {
 	}
 
 	public void testOneNumberOther() {
-		Function fun = new Multiply();
+		Callable fun = new Multiply();
 		ArgumentList args = ArgumentList.createArgumentList();
 		args.addArg(SparseInt.valueOf(2));
 		Entity call = fun.callWithScope(args, scope);
@@ -31,7 +31,7 @@ public class MultiplyTest extends SparserTestCase {
 	}
 
 	public void testTwoNumbers() {
-		Function fun = new Multiply();
+		Callable fun = new Multiply();
 		ArgumentList args = ArgumentList.createArgumentList();
 		args.addArg(SparseInt.valueOf(2));
 		args.addArg(SparseInt.valueOf(3));

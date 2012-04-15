@@ -1,16 +1,15 @@
 package specialForms;
 
 import sparser.ArgumentList;
-import sparser.ArgumentReturningProcessor;
 import sparser.Entity;
-import sparser.Function;
 import sparser.Scope;
 import sparser.SparseBoolean;
+import sparser.SpecialForm;
 
-public class If extends Function {
+public class If extends SpecialForm {
 
 	public If() {
-		super("if", new ArgumentReturningProcessor());
+		super("if");
 	}
 
 	@Override

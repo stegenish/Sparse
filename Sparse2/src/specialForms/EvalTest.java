@@ -2,7 +2,7 @@ package specialForms;
 
 import sparser.ArgumentList;
 import sparser.Entity;
-import sparser.Function;
+import sparser.Callable;
 import sparser.SparseInt;
 import sparser.SparserTestCase;
 
@@ -13,7 +13,7 @@ public class EvalTest extends SparserTestCase {
 	}
 
 	public void testEvalReturnExecuteValueOfArgument() throws Exception {
-		Function eval = new Eval();
+		Callable eval = new Eval();
 		ArgumentList args = ArgumentList.createArgumentList();
 		Entity entity = parser.parseString("(quote (add 1 2))").execute(globalScope);
 		args.addArg(entity);

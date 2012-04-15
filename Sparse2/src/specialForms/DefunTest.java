@@ -4,6 +4,7 @@ package specialForms;
 import sparser.ArgumentList;
 import sparser.Code;
 import sparser.Entity;
+import sparser.Callable;
 import sparser.SparseList;
 import sparser.SparserTestCase;
 import sparser.Symbol;
@@ -26,7 +27,7 @@ public class DefunTest extends SparserTestCase {
 
 	public void testSimpleFunction() throws Exception {
 		String program = "(defun funcName () (test 1 2 3 4 5)(test 3 a))";
-		UserDefinedFunction func = parseFunction(program);
+		Callable func = parseFunction(program);
         Symbol symbol = getSymbol("funcName");
         assertEquals(symbol.execute(scope), func);
         ArgumentList passedArgs = ArgumentList.createArgumentList();
@@ -39,7 +40,7 @@ public class DefunTest extends SparserTestCase {
 
 	public void testFunctionWithParameters() throws Exception {
 		String program = "(defun adder (a b) (testFun (add a b)))";
-		UserDefinedFunction func = parseFunction(program);
+		Callable func = parseFunction(program);
         ArgumentList passedArgs = ArgumentList.createArgumentList();
         passedArgs.addArg(sparseInt("4"));
         passedArgs.addArg(sparseInt("5"));
@@ -47,9 +48,9 @@ public class DefunTest extends SparserTestCase {
 		assertEquals(sparseInt("9"), testFunction.lastCallArgs.next());
 	}
 
-	private UserDefinedFunction parseFunction(String program) {
+	private Callable parseFunction(String program) {
 		Code code = parser.parseString(program);
-        UserDefinedFunction func = (UserDefinedFunction) code.execute(globalScope);
+        Callable func = (Callable) code.execute(globalScope);
 		return func;
 	}
 }

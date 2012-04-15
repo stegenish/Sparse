@@ -1,18 +1,17 @@
 package specialForms;
 
 import sparser.ArgumentList;
-import sparser.ArgumentReturningProcessor;
 import sparser.Entity;
-import sparser.Function;
 import sparser.Scope;
+import sparser.SpecialForm;
 import sparser.Symbol;
 
-public class Bind extends Function {
+public class Bind extends SpecialForm {
 
 	private Scope globalScope;
 
 	public Bind(Scope globalScope) {
-		super("bind", new ArgumentReturningProcessor());
+		super("bind");
 		this.globalScope = globalScope;
 	}
 

@@ -2,7 +2,6 @@ package sparser.builtins;
 
 import java.math.BigInteger;
 
-import sparser.ArgumentEvaluatingProcessor;
 import sparser.ArgumentList;
 import sparser.Entity;
 import sparser.Function;
@@ -12,7 +11,7 @@ import sparser.SparseInt;
 public class Multiply extends Function {
 
 	public Multiply() {
-		super("multiply", new ArgumentEvaluatingProcessor());
+		super("multiply");
 	}
 
 	public Entity callImplementation(ArgumentList args, Scope scope) {
