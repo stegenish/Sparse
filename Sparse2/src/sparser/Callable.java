@@ -35,7 +35,8 @@ public abstract class Callable implements Entity
 
 	private Entity call(ArgumentList args, Scope scope) {
 		ArgumentList processedArguments = argumentProcessor.processArguments(args, scope);
-		return callImplementation(processedArguments, scopeSemantics.createNewScope(scope));
+		Scope newScope = scopeSemantics.createNewScope(scope);
+		return callImplementation(processedArguments, newScope);
 	}
 
     protected abstract Entity callImplementation(ArgumentList args, Scope scope);

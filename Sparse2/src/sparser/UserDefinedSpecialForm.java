@@ -11,11 +11,6 @@ public class UserDefinedSpecialForm extends SpecialForm {
 
 	@Override
 	public Entity callImplementation(ArgumentList args, Scope scope) {
-		//Scope localScope = scopeSemantics.createNewScope(scope);
 		return functionBody.callBody(args, scope);
-	}
-
-	public String getName() {
-		return null;
 	}
 }
