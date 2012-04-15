@@ -10,8 +10,12 @@ public class UserDefinedFunction extends Function {
 
 	@Override
 	public Entity callImplementation(ArgumentList args, Scope scope) {
-		Scope localScope = scope.createFunctionScope();
+		Scope localScope = createNewScope(scope);
 		return functionBody.callBody(args, localScope);
+	}
+
+	private static Scope createNewScope(Scope scope) {
+		return scope.createFunctionScope();
 	}
 
 	public String getName() {

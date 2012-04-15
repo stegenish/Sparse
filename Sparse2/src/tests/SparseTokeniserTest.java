@@ -14,7 +14,7 @@ import java.io.*;
  */
 public class SparseTokeniserTest extends TestCase
 {
-    private static final String PATH = "D:/programming/Sparse2/testSources/";
+    private static final String PATH = "testSources/";
 
     private SparseTokeniser        toks;
     private Vector<String>                 answers;

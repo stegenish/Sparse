@@ -1,12 +1,12 @@
 package tests;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 
-import sparser.SparseSourceRunner;
-
 import junit.framework.TestCase;
+import sparser.SparseSourceRunner;
 
 public class SourceTest extends TestCase {
 
@@ -35,7 +35,9 @@ public class SourceTest extends TestCase {
 	}
 	
 	private void run(String string) throws FileNotFoundException {
-		String filePath = "D:/programming/Sparse2/testSources/" + string;
+		String absolutePath = new File(".").getAbsolutePath();
+		String filePath = "testSources/" + string;
+		
 		BufferedReader reader = new BufferedReader(new FileReader(filePath));
 		SparseSourceRunner runner = new SparseSourceRunner(reader);
 		runner.run();
