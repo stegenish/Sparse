@@ -15,7 +15,7 @@ public class UserDefinedFunctionTest extends SparserTestCase {
 	}
 
 	private Callable createUserDefinedFunction(Code code) {
-		return new UserDefinedFunction("",null, code, new FunctionScopeSemantics());
+		return new UserDefinedFunction("",null, code);
 	}
 
 	public void testMultipleForms() throws Exception {
@@ -30,7 +30,7 @@ public class UserDefinedFunctionTest extends SparserTestCase {
 	public void testWithParameters() throws Exception {
 		Code code = parser.parseString("(bind 12 l1)(bind (add p1 p2 l1) qqq)");
 		SparseList parameters = (SparseList) parser.parseString("(p1 p2)").getEntities().get(0);
-		Callable func = new UserDefinedFunction("",parameters, code, new FunctionScopeSemantics());
+		Callable func = new UserDefinedFunction("",parameters, code);
 		ArgumentList args = ArgumentList.createArgumentList();
 		args.addArg(SparseInt.valueOf("4"));
 		args.addArg(SparseInt.valueOf("6"));
