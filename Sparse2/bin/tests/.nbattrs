@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE attributes PUBLIC "-//NetBeans//DTD DefaultAttributes 1.0//EN" "http://www.netbeans.org/dtds/attributes-1_0.dtd">
+<attributes version="1.0">
+    <fileobject name="ArgumentListTest.java">
+        <attr name="class_dependency_junit.framework.TestCase" stringvalue="ArgumentListTest"/>
+    </fileobject>
+    <fileobject name="FuncCallTest.java">
+        <attr name="class_dependency_junit.framework.TestCase" stringvalue="FuncCallTest"/>
+    </fileobject>
+    <fileobject name="SparseListTest.java">
+        <attr name="class_dependency_junit.framework.TestCase" stringvalue="SparseListTest"/>
+    </fileobject>
+    <fileobject name="SparseTokeniserTest.java">
+        <attr name="class_dependency_junit.framework.TestCase" stringvalue="SparseTokeniserTest"/>
+    </fileobject>
+    <fileobject name="SparserTest.java">
+        <attr name="class_dependency_junit.framework.TestCase" stringvalue="SparserTest"/>
+    </fileobject>
+</attributes>
