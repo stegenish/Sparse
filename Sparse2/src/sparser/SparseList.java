@@ -119,12 +119,12 @@ public class SparseList implements Entity, Iterable<Entity> {
 	     * Holds the element of this list node.
 	     */
 
-	    private Entity element;
+	    protected Entity element;
 	    /**
 	     * The next node in the list. Set to null if this is the last
 	     * element.
 	     */
-	    private SparseListNode next;
+	    protected SparseListNode next;
 	    
 	    public SparseListNode(Entity elem)
 	    {
@@ -269,7 +269,7 @@ public class SparseList implements Entity, Iterable<Entity> {
 	        return str;
 	    }
 
-	    private class SparseListIterator implements Iterator<Entity> {
+	    class SparseListIterator implements Iterator<Entity> {
 
 	    	private SparseListNode current = SparseListNode.this;
 
