@@ -35,7 +35,6 @@ public class SourceTest extends TestCase {
 	}
 	
 	private void run(String string) throws FileNotFoundException {
-		String absolutePath = new File(".").getAbsolutePath();
 		String filePath = "testSources/" + string;
 		
 		BufferedReader reader = new BufferedReader(new FileReader(filePath));
