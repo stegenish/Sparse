@@ -13,6 +13,7 @@ public class Eval extends SpecialForm {
 
 	@Override
 	protected Entity callImplementation(ArgumentList args, Scope scope) {
-		return args.next().execute(scope);
+		Entity entity = args.next();
+		return entity.execute(scope);
 	}
 }

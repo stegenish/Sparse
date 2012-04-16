@@ -17,3 +17,6 @@
 (bind (testSpecial 2) result)
 (assert 2 result "Specials can access parent scope")
 
+(bind 3 a)
+(special 2)
+(assert 3 a)
