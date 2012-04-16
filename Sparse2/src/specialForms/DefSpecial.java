@@ -21,9 +21,9 @@ public class DefSpecial extends Callable {
 		Symbol name = (Symbol) args.next();
 		SparseList params = (SparseList) args.next();
 		Code code = createCode(args);
-		UserDefinedSpecialForm userDefinedFunction = new UserDefinedSpecialForm(name.toString(), params, code);
-		scope.bind(name, userDefinedFunction);
-		return userDefinedFunction;
+		UserDefinedSpecialForm userDefinedSpecialForm = new UserDefinedSpecialForm(name.toString(), params, code);
+		scope.bind(name, userDefinedSpecialForm);
+		return userDefinedSpecialForm;
 	}
 
 	private Code createCode(ArgumentList args) {
