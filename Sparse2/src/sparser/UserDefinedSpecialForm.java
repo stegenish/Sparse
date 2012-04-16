@@ -6,7 +6,7 @@ public class UserDefinedSpecialForm extends SpecialForm {
 
 	public UserDefinedSpecialForm(String name, SparseList parameters, Code code) {
 		super(name);
-		functionBody = new FunctionBody(code, parameters);
+		functionBody = new FunctionBody(parameters, code);
 	}
 
 	@Override

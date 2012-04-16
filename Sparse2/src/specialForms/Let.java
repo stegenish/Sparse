@@ -7,7 +7,6 @@ import sparser.Code;
 import sparser.Entity;
 import sparser.Scope;
 import sparser.SparseList;
-import sparser.SparseNull;
 import sparser.SpecialForm;
 import sparser.Symbol;
 
@@ -22,20 +21,23 @@ public class Let extends SpecialForm {
 		SparseList bindingList = (SparseList) args.next();
 		Scope letScope = createLetScope(scope, bindingList);
 		Code body = createLetBody(args);
-		body.execute(letScope);
-		return SparseNull.theNull;
+		return body.execute(letScope);
 	}
 
 	private Scope createLetScope(Scope scope, SparseList bindingList) {
 		Scope letScope = scope.createShadowScope();
 		for(Entity binding : bindingList) {
-			SparseList bindingAsList = (SparseList)binding;
-			Iterator<Entity> iterator = bindingAsList.iterator();
-			Symbol symbol = (Symbol) iterator.next();
-			Entity value = iterator.next();
-			letScope.bind(symbol, value.execute(scope));
+			bindToScope(scope, letScope, (SparseList) binding);
 		}
+		
 		return letScope;
+	}
+
+	private void bindToScope(Scope scope, Scope letScope, SparseList binding) {
+		Iterator<Entity> iterator = binding.iterator();
+		Symbol symbol = (Symbol) iterator.next();
+		Entity value = iterator.next();
+		letScope.bind(symbol, value.execute(scope));
 	}
 
 	private Code createLetBody(ArgumentList args) {

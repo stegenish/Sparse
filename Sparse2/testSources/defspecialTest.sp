@@ -16,3 +16,8 @@
 
 (bind (testSpecial 2) result)
 (assert 2 result "Specials can access parent scope")
+
+(defspecial with-rest (a (&rest more))
+   more)
+   
+(assert (quote (1 2 3)) (with-rest "" 1 2 3))
