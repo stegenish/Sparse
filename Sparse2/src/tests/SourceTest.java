@@ -1,13 +1,7 @@
 package tests;
 
-import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
 
-import junit.framework.TestCase;
-import sparser.SparseSourceRunner;
-
-public class SourceTest extends TestCase {
+public class SourceTest extends SparserSourceTestCase {
 
 	public void testBasic() throws Exception {
 		run("basic.sp");
@@ -31,13 +25,5 @@ public class SourceTest extends TestCase {
 
 	public void testIf() throws Exception {
 		run("iftest.sp");
-	}
-	
-	private void run(String string) throws FileNotFoundException {
-		String filePath = "testSources/" + string;
-		
-		BufferedReader reader = new BufferedReader(new FileReader(filePath));
-		SparseSourceRunner runner = new SparseSourceRunner(reader);
-		runner.run();
 	}
 }
