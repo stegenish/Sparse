@@ -12,8 +12,8 @@ public class FunctionBody {
 
 	public Entity callBody(ArgumentList args, Scope localScope) {
 		if(parameters != null) {
-			for(Entity e : parameters) {
-				Symbol sym = (Symbol)e;
+			for(Entity parameter : parameters) {
+				Symbol sym = (Symbol)parameter;
 				localScope.bind(sym, args.next());
 			}
 		}
