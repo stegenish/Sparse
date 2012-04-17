@@ -94,11 +94,21 @@ public class Sparser
 		    case SparseToken.STRING:
 		    	entity = parseString(token);
 		        break;
+		    case SparseToken.READER_MACRO:
+		    	entity = readerMacro();
+		    	break;
 		    default:
 		        throw new SyntaxErrorException(token, "Unexpected token. " +
 		                            "Expected a list, symbol or string");
 		}
 		return entity;
+	}
+
+	private Entity readerMacro() {
+		SparseList sparseList = new SparseList();
+		sparseList.append(getSymbol("quote"));
+		sparseList.append(parseNextForm());
+		return sparseList;
 	}
 
 	private SparseList parseList()
