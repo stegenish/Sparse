@@ -6,7 +6,7 @@ public class UserDefinedFunction extends Function {
 	
 	public UserDefinedFunction(String name, SparseList parameters, Code code) {
 		super(name);
-		functionBody = new FunctionBody(code, parameters);
+		functionBody = new FunctionBody(parameters, code);
 	}
 
 	@Override

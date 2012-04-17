@@ -15,6 +15,7 @@ import specialForms.Bind;
 import specialForms.DefSpecial;
 import specialForms.Defun;
 import specialForms.If;
+import specialForms.Let;
 import specialForms.Quote;
 
 /**
@@ -45,6 +46,7 @@ public class Sparser
 		bindSymbol("true", SparseBoolean.True, scope);
 		bindSymbol("false", SparseBoolean.False, scope);
 		bindSymbol("if", new If(), scope);
+		bindSymbol("let", new Let(), scope);
 	}
 
 	public Code parseString(String code) {

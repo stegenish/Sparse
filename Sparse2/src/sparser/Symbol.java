@@ -12,12 +12,8 @@ package sparser;
  */
 public class Symbol implements Entity
 {
-    /**
-     * The name of the symbol
-     */
     private String name;
 
-    /** Creates a new instance of Symbol */
     public Symbol(String name)
     {
         this.name = name;
