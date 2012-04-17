@@ -1,14 +1,16 @@
 package specialForms;
 
+import sparser.ArgumentEvaluatingSemantics;
 import sparser.ArgumentList;
+import sparser.Callable;
 import sparser.Entity;
+import sparser.SameScopeSemantics;
 import sparser.Scope;
-import sparser.SpecialForm;
 
-public class Eval extends SpecialForm {
+public class Eval extends Callable {
 
 	public Eval() {
-		super("eval");
+		super("eval", new ArgumentEvaluatingSemantics(), new SameScopeSemantics());
 	}
 
 	@Override

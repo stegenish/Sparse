@@ -5,15 +5,19 @@
 (assert 4 a)
 (assert 5 b)
 
+(defun fun1 () 3)
+
 (let 
    ((a 1)
-    (b (add a 2)))
+    (b (add a 2))
+    (z (fun1)))
    (assert 1 a "a should shadow a in global scope in let")
    (print "a:" a)
    (assert 6 b "b should shadow b in global scope in let, a comes from global scope")
    (print "b:" b)
    (assert 7 c "c should access global binding in let")
-   (print "c:" c))
+   (print "c:" c)
+   (assert 3 z "z should access global binding in let"))
    
 (defun letTest (d)
    (let ((localInFunction 42)) 

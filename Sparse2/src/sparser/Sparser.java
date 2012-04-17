@@ -8,12 +8,15 @@ package sparser;
 
 import sparser.builtins.Add;
 import sparser.builtins.AssertEquals;
+import sparser.builtins.Concat;
 import sparser.builtins.First;
+import sparser.builtins.List;
 import sparser.builtins.Multiply;
 import sparser.builtins.Print;
 import specialForms.Bind;
 import specialForms.DefSpecial;
 import specialForms.Defun;
+import specialForms.Eval;
 import specialForms.If;
 import specialForms.Let;
 import specialForms.Quote;
@@ -47,6 +50,9 @@ public class Sparser
 		bindSymbol("false", SparseBoolean.False, scope);
 		bindSymbol("if", new If(), scope);
 		bindSymbol("let", new Let(), scope);
+		bindSymbol("list", new List(), scope);
+		bindSymbol("concat", new Concat(), scope);
+		bindSymbol("eval", new Eval(), scope);
 	}
 
 	public Code parseString(String code) {
