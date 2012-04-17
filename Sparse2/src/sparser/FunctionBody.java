@@ -17,7 +17,7 @@ public class FunctionBody {
 					bindSymbolParameter(args, localScope, parameter);
 				} else {
 					SparseList param = (SparseList) parameter;
-					Entity modifier = param.getFirstElement();
+					param.getFirstElement();
 					Symbol symbol = (Symbol) param.getNext().getFirstElement();
 					SparseList restList = new SparseList();
 					while(args.hasNext()) {
