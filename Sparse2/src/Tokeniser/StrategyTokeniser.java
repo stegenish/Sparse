@@ -120,13 +120,12 @@ public class StrategyTokeniser implements Tokeniser
 
             if(haveToken)
             {
-                /*first create the token*/
-                tok = strategy.createToken();  /***HOOK***/
+                tok = strategy.createToken();
                 tok.setLine(tokLine);
                 tok.setColumn(tokCol);
-                back = strategy.goBack();      /***HOOK***/
-                strategy.reset();              /***HOOK***/
-                /*Negative values not allowed*/
+                back = strategy.goBack();
+                strategy.reset();
+                
                 if(back < 0)
                 {
                     throw new TokeniserException("goBack cannot return  "+
@@ -143,8 +142,6 @@ public class StrategyTokeniser implements Tokeniser
                 strpos -= back;
                 tokens.add(tok);
 
-                /*update column and line properly in case there is a need to
-                  go back*/
                 column -= back;
                 while(column < 1)
                 {
@@ -157,16 +154,20 @@ public class StrategyTokeniser implements Tokeniser
                 tokCol = column;
             }
         }
-        /*Check if there are any leftover characters and if
-          they form a token.*/
-        tok = strategy.endOfInput();      /***HOOK***/
+
+        endOfInput(tokLine, tokCol);
+    }
+
+	private void endOfInput(int tokLine, int tokCol) {
+		Token tok;
+		tok = strategy.endOfInput();
         if(tok != null)
         {
             tok.setLine(tokLine);
             tok.setColumn(tokCol);
             tokens.add(tok);
         }
-    }
+	}
 
     /**
      * @see Tokeniser#hasMore()

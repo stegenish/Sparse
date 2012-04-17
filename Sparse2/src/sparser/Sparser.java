@@ -57,10 +57,10 @@ public class Sparser
 
 	public Code parseString(String code) {
 		SparseTokeniser toks = new SparseTokeniser(code);
-		return parse(toks);
+		return parseCode(toks);
 	}
 
-    private Code parse(SparseTokeniser toks)
+    private Code parseCode(SparseTokeniser toks)
     {
     	Code code = new Code();
     	while(toks.hasMore()) {
@@ -73,7 +73,7 @@ public class Sparser
     }
 
     public void bindSymbol(String string, Entity entity, Scope scope) {
-		Symbol symbol = parseSymbol(new SparseToken(string));
+		Symbol symbol = parseSymbol(new SparseToken(string, false));
 		scope.bind(symbol, entity);
 	}
 
@@ -124,8 +124,6 @@ public class Sparser
         }
         return list;
     }
-
-
 
     private Symbol parseSymbol(SparseToken tok)
     {
