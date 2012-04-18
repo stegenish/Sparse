@@ -6,10 +6,11 @@
 
 package sparser;
 
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Method;
+
 import sparser.builtins.Add;
 import sparser.builtins.AssertEquals;
-import sparser.builtins.Concat;
-import sparser.builtins.First;
 import sparser.builtins.List;
 import sparser.builtins.Multiply;
 import sparser.builtins.Print;
@@ -44,7 +45,6 @@ public class Sparser
 		bindSymbol("defspecial", new DefSpecial(), scope);
 		bindSymbol("multiply", new Multiply(), scope);
 		bindSymbol("print", new Print(), scope);
-		bindSymbol("first", new First(), scope);
 		bindSymbol("quote", new Quote(), scope);
 		bindSymbol("if", new If(), scope);
 		bindSymbol("true", SparseBoolean.True, scope);
@@ -52,8 +52,9 @@ public class Sparser
 		bindSymbol("if", new If(), scope);
 		bindSymbol("let", new Let(), scope);
 		bindSymbol("list", new List(), scope);
-		bindSymbol("concat", new Concat(), scope);
 		bindSymbol("eval", new Eval(), scope);
+		
+		exposeType(SparseList.class);
 	}
 	
 	public void bindSymbol(String string, Entity entity, Scope scope) {
@@ -165,5 +166,19 @@ public class Sparser
 
 	public Symbol getSymbol(String symName) {
 		return symbols.getSymbol(symName);
+	}
+
+	public void exposeType(Class<? extends Entity> type) {
+		Method[] methods = type.getMethods();
+		for (Method method : methods) {
+			Annotation[] declaredAnnotations = method.getDeclaredAnnotations();
+			for (int i = 0; i < declaredAnnotations.length; i++) {
+				Annotation annotation = declaredAnnotations[i];
+				if(annotation instanceof ExposedSparseFunction) {
+					ExposedSparseFunction exposedFunction = (ExposedSparseFunction) annotation;
+					bindSymbol(exposedFunction.name(), new ExposedFunction(exposedFunction, method), globalScope);
+				}
+			}
+		}
 	}
 }

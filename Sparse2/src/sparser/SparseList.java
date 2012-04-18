@@ -17,24 +17,32 @@ public class SparseList implements Entity, Iterable<Entity> {
 	public SparseList() {
 		//default constructor
 	}
+	
 	public Entity execute(Scope scope) {
 		return first.execute(scope);
 	}
-	public void addFront(SparseList list) {
+	
+	public SparseList insertFront(SparseList list) {
 		if(first == null) {
 			first = list.first;
 		} else {
-			first.addFront(list.first);
+			first.insertFront(list.first);
 			first = list.first;
 		}
+		return this;
 	}
-	public void addLast(SparseList list) {
+	
+	@ExposedSparseFunction(name="concat")
+	public SparseList insertEnd(SparseList list) {
 		if(first == null) {
 			first = list.first;
 		} else {
-			first.addLast(list.first);
+			first.insertEnd(list.first);
 		}
+		return this;
 	}
+
+	@ExposedSparseFunction(name="append")
 	public void append(Entity elem) {
 		if(first == null) {
 			first = new SparseListNode(elem);
@@ -42,10 +50,12 @@ public class SparseList implements Entity, Iterable<Entity> {
 			first.append(elem);
 		}
 	}
+	
 	public StringBuffer createString(SparseListNode node, int level) {
 		return first.createString(node, level);
 	}
-
+	
+	@ExposedSparseFunction(name="first")
 	public Entity getFirstElement() {
 		return first.getElement();
 	}
@@ -54,6 +64,7 @@ public class SparseList implements Entity, Iterable<Entity> {
 		return new SparseList(first.getLast());
 	}
 
+	@ExposedSparseFunction(name="rest")
 	public SparseList getNext() {
 		if(first == null) {
 			return null;
@@ -115,15 +126,8 @@ public class SparseList implements Entity, Iterable<Entity> {
 
 	public class SparseListNode implements Entity, Iterable<Entity>
 	{
-	    /**
-	     * Holds the element of this list node.
-	     */
-
 	    protected Entity element;
-	    /**
-	     * The next node in the list. Set to null if this is the last
-	     * element.
-	     */
+
 	    protected SparseListNode next;
 	    
 	    public SparseListNode(Entity elem)
@@ -132,25 +136,16 @@ public class SparseList implements Entity, Iterable<Entity> {
 	        element = elem;
 	    }
 
-	    /**
-	     * Get the next node in the list.
-	     */
 	    public SparseListNode getNext()
 	    {
 	        return next;
 	    }
 
-	    /**
-	     * Sets the next node for this SparseList node.
-	     */
 	    public void setNext(SparseListNode newNext)
 	    {
 	        next = newNext;
 	    }
 
-	    /**
-	     * Returns the last element in this list.
-	     */
 	    public SparseListNode getLast()
 	    {
 	        SparseListNode tmp = this;
@@ -161,10 +156,7 @@ public class SparseList implements Entity, Iterable<Entity> {
 	        return tmp;
 	    }
 
-	    /**
-	     * Appends list to this list.
-	     */
-	    public void addLast(SparseListNode list)
+	    public void insertEnd(SparseListNode list)
 	    {
 	        getLast().setNext(list);
 	    }
@@ -176,7 +168,7 @@ public class SparseList implements Entity, Iterable<Entity> {
 	     * Note that list1.addFront(list2) is the same as list2.addLast(list1).
 	     * Running time is the same in both cases.
 	     */
-	    public void addFront(SparseListNode list)
+	    public void insertFront(SparseListNode list)
 	    {
 	        list.getLast().setNext(this);
 	    }
