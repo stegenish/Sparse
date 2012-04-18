@@ -36,4 +36,14 @@ public class SparserTest extends SparserTestCase {
 		Entity expectedValue = parser.parseString("(2 3)").getEntities().get(0);
 		assertEquals(expectedValue, theRest);
 	}
+	
+	public void testUnfinishedNestedListThrowsSyntaxException() {
+		Exception thrownException = null;
+		try {
+			parser.parseString("((a)");
+		} catch (Exception e) {
+			thrownException = e;
+		}
+		assertTrue(thrownException instanceof SyntaxErrorException);
+	}
 }

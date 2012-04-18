@@ -71,15 +71,15 @@ public class Sparser
     {
     	Code code = new Code();
     	while(tokens.hasMore()) {
-    		Entity entity = parseNextForm();
+    		Entity entity = parseNextForm(true);
     		code.appendEntity(entity);
     	}
         return code;
     }
 
-	public Entity parseNextForm() {
+	public Entity parseNextForm(boolean canEnd) {
 		
-		SparseToken token = nextToken(true);
+		SparseToken token = nextToken(canEnd);
 		Entity entity;
 		switch(token.getType())
 		{
@@ -108,7 +108,7 @@ public class Sparser
 	private Entity readerMacro() {
 		SparseList sparseList = new SparseList();
 		sparseList.append(getSymbol("quote"));
-		sparseList.append(parseNextForm());
+		sparseList.append(parseNextForm(false));
 		return sparseList;
 	}
 
@@ -123,7 +123,7 @@ public class Sparser
     }
 
 	private boolean appendNextListElement(SparseList list) {
-		Entity entity = parseNextForm();
+		Entity entity = parseNextForm(false);
 		boolean addingElement = entity != null;
 		if(addingElement) {
 			list.append(entity);
