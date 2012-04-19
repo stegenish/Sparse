@@ -38,7 +38,7 @@ public class ScopeTest extends SparserTestCase {
 	public void testCreateSubFunctionScope() throws Exception {
 		Scope subScope = globalScope.createFunctionScope();
 		Symbol symbol = getSymbol("testSymbol");
-		SparseString value = new SparseString("hello hello");
+		Entity value = new SparseString("hello hello");
 		subScope.bind(symbol, value);
 		Scope subSubScope = subScope.createFunctionScope();
 		assertNull(subSubScope.getBinding(symbol));
@@ -47,7 +47,7 @@ public class ScopeTest extends SparserTestCase {
 	public void testCreateShadowScope() throws Exception {
 		Scope subScope = globalScope.createFunctionScope();
 		Symbol symbol = getSymbol("testSymbol");
-		SparseString value = new SparseString("hello hello");
+		Entity value = new SparseString("hello hello");
 		subScope.bind(symbol, value);
 		Scope subSubScope = subScope.createShadowScope();
 		assertEquals(value, subSubScope.getBinding(symbol));
@@ -56,10 +56,10 @@ public class ScopeTest extends SparserTestCase {
 	public void testCreateShadowedShadowScope() throws Exception {
 		Scope shadowScope = globalScope.createFunctionScope();
 		Symbol symbol = getSymbol("testSymbol");
-		SparseString value = new SparseString("hello hello");
+		Entity value = new SparseString("hello hello");
 		shadowScope.bind(symbol, value);
 		Scope shadowedShadowScope = shadowScope.createShadowScope().createShadowScope();
-		SparseString shadowedShadowValue = new SparseString("another string");
+		Entity shadowedShadowValue = new SparseString("another string");
 		shadowedShadowScope.bind(symbol, shadowedShadowValue);
 		assertEquals(shadowedShadowValue, shadowedShadowScope.getBinding(symbol));
 	}
@@ -67,7 +67,7 @@ public class ScopeTest extends SparserTestCase {
 	public void testCreateFunctionShadowScopeHidesAllShadowScopes() throws Exception {
 		Scope shadowScope = globalScope.createFunctionScope();
 		Symbol symbol = getSymbol("testSymbol");
-		SparseString value = new SparseString("hello hello");
+		Entity value = new SparseString("hello hello");
 		shadowScope.bind(symbol, value);
 		Scope shadowedShadowScope = shadowScope.createShadowScope().createFunctionScope();
 		assertEquals(null, shadowedShadowScope.getBinding(symbol));

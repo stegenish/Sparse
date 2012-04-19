@@ -40,4 +40,9 @@ public class SparseString implements Entity
     public int hashCode() {
     	return string.hashCode();
     }
+
+	@Override
+	public String createString() {
+		return "\"" + getString() + "\"";
+	}
 }

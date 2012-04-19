@@ -143,7 +143,7 @@ public class Sparser
         return s;
     }
 
-    private SparseString parseString(SparseToken token)
+    private Entity parseString(SparseToken token)
     {
         return new SparseString(token.getToken().substring(1, token.getToken().length() - 1));
     }

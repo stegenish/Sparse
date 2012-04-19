@@ -37,4 +37,8 @@ public class Symbol implements Entity
     {
         return getName();
     }
+
+	public String createString() {
+		return getName();
+	}
 }

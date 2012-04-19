@@ -1,10 +1,16 @@
-
-(defspecial thisIsAFunction (name params (&rest body))
-     (concat (list (quote defspecial) name params) body))
+(defspecial defun1 (name param (&rest body))
+     (eval (concat (list 'defspecial name param)
+               (list 
+                 (concat 
+                   (list 'let (list 
+                     (list (first param) (list 'eval (first param)))))
+                   body)))))
    
-(print (thisIsAFunction fun (param1 param2) (add a) a param2))
+(defun1 fun (param1) 
+   (print param1))
+   
+(defspecial fun2 (param1) 
+   (print param1))
 
-(defspecial test (p1 p2)
-   (let ((p1 (eval p1))
-         (p2 (eval p2)))
-       ))
+(fun (list 1 2 3 ))
+(fun2 (list 1 2 3 ))

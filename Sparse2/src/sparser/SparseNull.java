@@ -11,4 +11,8 @@ public class SparseNull implements Entity {
 		return this;
 	}
 
+	public String createString() {
+		return null;
+	}
+
 }

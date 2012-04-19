@@ -22,4 +22,8 @@ public class Code implements Entity {
 	public List<Entity> getEntities() {
 		return program;
 	}
+
+	public String createString() {
+		return null;
+	}
 }

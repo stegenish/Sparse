@@ -12,4 +12,8 @@ public class SparseBoolean implements Entity {
 	public Entity execute(Scope scope) {
 		return this;
 	}
+
+	public String createString() {
+		return null;
+	}
 }

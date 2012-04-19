@@ -40,4 +40,8 @@ public abstract class Callable implements Entity
 	}
 
     protected abstract Entity callImplementation(ArgumentList args, Scope scope);
+
+	public String createString() {
+		return null;
+	}
 }
