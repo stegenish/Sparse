@@ -55,6 +55,7 @@ public class Sparser
 		bindSymbol("eval", new Eval(), scope);
 		
 		exposeType(SparseList.class);
+		exposeType(SparseInt.class);
 	}
 	
 	public void bindSymbol(String string, Entity entity, Scope scope) {
@@ -182,3 +183,4 @@ public class Sparser
 		}
 	}
 }
+

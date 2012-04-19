@@ -2,8 +2,8 @@ package sparser;
 
 public class SparseBoolean implements Entity {
 
-	public static final Entity False = new SparseBoolean();
-	public static final Entity True = new SparseBoolean();
+	public static final SparseBoolean False = new SparseBoolean();
+	public static final SparseBoolean True = new SparseBoolean();
 	
 	private SparseBoolean() {
 		
@@ -15,5 +15,9 @@ public class SparseBoolean implements Entity {
 
 	public String createString() {
 		return null;
+	}
+	
+	public static SparseBoolean toSparseBoolean(boolean b) {
+		return b ? True : False;
 	}
 }

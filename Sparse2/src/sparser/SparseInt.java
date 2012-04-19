@@ -7,6 +7,7 @@
 package sparser;
 
 import java.math.BigInteger;
+import static sparser.SparseBoolean.toSparseBoolean;
 
 /**
  * The integer type for Sparse.
@@ -39,6 +40,25 @@ public class SparseInt extends Symbol
         return this;
     }
 
+    @ExposedSparseFunction(name = "<")
+    public SparseBoolean lessThan(SparseInt other) {
+    	return toSparseBoolean(compareTo(other) < 0);
+	}
+    
+    @ExposedSparseFunction(name = ">")
+    public SparseBoolean greaterThan(SparseInt other) {
+    	return toSparseBoolean(compareTo(other) > 0);
+	}
+
+    @ExposedSparseFunction(name = "=")
+    public SparseBoolean equal(SparseInt other) {
+    	return toSparseBoolean(compareTo(other) == 0);
+	}
+    
+	private int compareTo(SparseInt other) {
+		return this.num.compareTo(other.num);
+	}
+    
     public boolean equals(Object obj) {
     	if(obj instanceof SparseInt) {
     		SparseInt i = (SparseInt) obj;
@@ -62,5 +82,4 @@ public class SparseInt extends Symbol
 	public static SparseInt valueOf(BigInteger bigInteger) {
 		return new SparseInt(bigInteger);
 	}
-
 }

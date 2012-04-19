@@ -15,8 +15,14 @@ public class ExposedFunction extends Function {
 	protected Entity callImplementation(ArgumentList args, Scope scope) {
 		Entity object = args.next();
 		Object[] parameters = createParameters(args);
-		
-		return callMethodOnObject(object, parameters);
+		Object returnValue = callMethodOnObject(object, parameters);
+		return toEntity(returnValue);
+	}
+
+	private Entity toEntity(Object returnValue) {
+		Entity entityValue;
+	    entityValue = (Entity) returnValue;
+		return entityValue;
 	}
 
 	private Object[] createParameters(ArgumentList args) {
@@ -31,9 +37,9 @@ public class ExposedFunction extends Function {
 		return method.getParameterTypes().length;
 	}
 	
-	private Entity callMethodOnObject(Entity object, Object[] parameters) {
+	private Object callMethodOnObject(Entity object, Object[] parameters) {
 		try {
-			return (Entity) method.invoke(object, parameters);
+			return method.invoke(object, parameters);
 		} catch (IllegalAccessException e) {
 			e.printStackTrace();
 		} catch (IllegalArgumentException e) {

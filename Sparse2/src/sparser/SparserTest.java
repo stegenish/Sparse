@@ -30,6 +30,11 @@ public class SparserTest extends SparserTestCase {
 		assertEquals(SparseInt.valueOf(1), firstElement);
 	}
 	
+	public void testLessThanExposed() throws Exception {
+		Code code = parser.parseString("(< 1 2)");
+		assertEquals(SparseBoolean.True, code.execute(globalScope));
+	}
+	
 	public void testRestExposed() throws Exception {
 		Code code = parser.parseString("(rest (list 1 2 3))");
 		Entity theRest = code.execute(globalScope);
