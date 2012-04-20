@@ -53,6 +53,7 @@ public class Sparser
 		bindSymbol("let", new Let(), scope);
 		bindSymbol("list", new List(), scope);
 		bindSymbol("eval", new Eval(), scope);
+		bindSymbol("while", new While(), scope);
 		
 		exposeType(SparseList.class);
 		exposeType(SparseInt.class);

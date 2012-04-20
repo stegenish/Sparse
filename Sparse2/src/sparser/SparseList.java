@@ -54,6 +54,15 @@ public class SparseList implements Entity, Iterable<Entity> {
 	public Entity getFirstElement() {
 		return first.getElement();
 	}
+	
+	@ExposedSparseFunction(name="second")
+	public Entity getSecondElement() {
+		Entity element = SparseNull.theNull;
+		if(first.next != null) {
+			element = first.next.getElement();
+		}
+		return element;
+	}
 
 	public SparseList getLast() {
 		return new SparseList(first.getLast());
