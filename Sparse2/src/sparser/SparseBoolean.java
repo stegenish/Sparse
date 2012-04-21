@@ -20,4 +20,9 @@ public class SparseBoolean implements Entity {
 	public static SparseBoolean toSparseBoolean(boolean b) {
 		return b ? True : False;
 	}
+
+	@Override
+	public SparseBoolean equal(Object other) {
+		return toSparseBoolean(this == other);
+	}
 }

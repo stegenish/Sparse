@@ -1,5 +1,7 @@
 package sparser;
 
+import static sparser.SparseBoolean.toSparseBoolean;
+
 /**
  *
  * @author  Administrator
@@ -43,5 +45,10 @@ public abstract class Callable implements Entity
 
 	public String createString() {
 		return null;
+	}
+	
+	@Override
+	public SparseBoolean equal(Object other) {
+		return toSparseBoolean(this == other);
 	}
 }

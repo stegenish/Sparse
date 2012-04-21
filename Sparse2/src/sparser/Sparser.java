@@ -11,6 +11,7 @@ import java.lang.reflect.Method;
 
 import sparser.builtins.Add;
 import sparser.builtins.AssertEquals;
+import sparser.builtins.Import;
 import sparser.builtins.List;
 import sparser.builtins.Multiply;
 import sparser.builtins.Print;
@@ -54,9 +55,11 @@ public class Sparser
 		bindSymbol("list", new List(), scope);
 		bindSymbol("eval", new Eval(), scope);
 		bindSymbol("while", new While(), scope);
+		bindSymbol("import", new Import(this), scope);
 		
 		exposeType(SparseList.class);
 		exposeType(SparseInt.class);
+		exposeType(Entity.class);
 	}
 	
 	public void bindSymbol(String string, Entity entity, Scope scope) {

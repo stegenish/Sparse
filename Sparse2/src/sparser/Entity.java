@@ -4,5 +4,8 @@ public interface Entity
 {
     public Entity execute(Scope scope);
 
-	public abstract String createString();
+	public String createString();
+	
+	@ExposedSparseFunction(name = "equal")
+	public SparseBoolean equal(Object other);
 }

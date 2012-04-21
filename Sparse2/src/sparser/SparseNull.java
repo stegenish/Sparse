@@ -1,5 +1,7 @@
 package sparser;
 
+import static sparser.SparseBoolean.toSparseBoolean;
+
 public class SparseNull implements Entity {
 
 	public static SparseNull theNull = new SparseNull();
@@ -13,6 +15,11 @@ public class SparseNull implements Entity {
 
 	public String createString() {
 		return null;
+	}
+
+	@Override
+	public SparseBoolean equal(Object other) {
+		return toSparseBoolean(other == theNull);
 	}
 
 }

@@ -66,6 +66,11 @@ public class SparseInt extends Symbol
     	}
     	return false;
     }
+    
+    @Override
+    public SparseBoolean equal(Object other) {
+    	return toSparseBoolean(equals(other));
+    }
 
     public int hashCode() {
     	return num.hashCode();

@@ -3,6 +3,8 @@ package sparser;
 import java.util.ArrayList;
 import java.util.Iterator;
 
+import static sparser.SparseBoolean.toSparseBoolean;
+
 public class SparseList implements Entity, Iterable<Entity> {
 
 	SparseListNode first = null;
@@ -110,25 +112,17 @@ public class SparseList implements Entity, Iterable<Entity> {
 	@Override
 	public boolean equals(Object obj) {
 		if(obj instanceof SparseList) {
-			return compareLists(obj);
+			return first.compareLists(obj);
 		}
 		return false;
 	}
 
-	private boolean compareLists(Object obj) {
-		Iterator<Entity> otherElements = ((SparseList) obj).iterator();
-		Iterator<Entity> thisElements = this.iterator();
-		while(otherElements.hasNext() && thisElements.hasNext()) {
-			Entity otherElement = otherElements.next();
-			Entity thisElement = thisElements.next();
-			if(!otherElement.equals(thisElement)) {
-				return false;
-			}
-		}
-		return otherElements.hasNext() == thisElements.hasNext();
-	}
-
 	public String createString() {
 		return first.createString();
+	}
+
+	@Override
+	public SparseBoolean equal(Object other) {
+		return toSparseBoolean(this.equals(other));
 	}
 }

@@ -2,6 +2,8 @@ package sparser;
 
 import java.util.Iterator;
 
+import static sparser.SparseBoolean.toSparseBoolean;
+
 public class SparseListNode implements Entity, Iterable<Entity>
 {
     protected Entity element;
@@ -84,6 +86,8 @@ public class SparseListNode implements Entity, Iterable<Entity>
 		}
 		return args;
 	}
+	
+	
 
 	private Callable getFunction(Scope scope) {
 		Callable fun;
@@ -138,4 +142,22 @@ public class SparseListNode implements Entity, Iterable<Entity>
 			throw new UnsupportedOperationException();
 		}
     }
+
+	@Override
+	public SparseBoolean equal(Object other) {
+		return toSparseBoolean(compareLists(other));
+	}
+	
+	public boolean compareLists(Object obj) {
+		Iterator<Entity> otherElements = ((SparseList) obj).iterator();
+		Iterator<Entity> thisElements = this.iterator();
+		while(otherElements.hasNext() && thisElements.hasNext()) {
+			Entity otherElement = otherElements.next();
+			Entity thisElement = thisElements.next();
+			if(!otherElement.equals(thisElement)) {
+				return false;
+			}
+		}
+		return otherElements.hasNext() == thisElements.hasNext();
+	}
 }
