@@ -6,6 +6,8 @@
 
 package sparser;
 
+import static sparser.SparseBoolean.toSparseBoolean;
+
 /**
  *
  * @author  Administrator
@@ -37,4 +39,13 @@ public class Symbol implements Entity
     {
         return getName();
     }
+
+	public String createString() {
+		return getName();
+	}
+
+	@Override
+	public SparseBoolean equal(Object other) {
+		return toSparseBoolean(this == other);
+	}
 }

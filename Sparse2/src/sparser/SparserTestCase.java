@@ -51,4 +51,8 @@ public abstract class SparserTestCase extends TestCase {
 	protected Entity parseEntity(String code) {
 		return parseProgram(code).getEntities().get(0);
 	}
+
+	protected Code parseString(String code2) {
+		return parser.parseString(code2);
+	}
 }

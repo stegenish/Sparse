@@ -6,14 +6,19 @@
 
 package sparser;
 
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Method;
+
 import sparser.builtins.Add;
 import sparser.builtins.AssertEquals;
-import sparser.builtins.First;
+import sparser.builtins.Import;
+import sparser.builtins.List;
 import sparser.builtins.Multiply;
 import sparser.builtins.Print;
 import specialForms.Bind;
 import specialForms.DefSpecial;
 import specialForms.Defun;
+import specialForms.Eval;
 import specialForms.If;
 import specialForms.Let;
 import specialForms.Quote;
@@ -26,6 +31,7 @@ public class Sparser
 {
     private Symbols symbols = new Symbols();
 	private Scope globalScope;
+	private SparseTokeniser tokens;
 
 	public Sparser(Scope scope) {
 		this.globalScope = scope;
@@ -40,90 +46,99 @@ public class Sparser
 		bindSymbol("defspecial", new DefSpecial(), scope);
 		bindSymbol("multiply", new Multiply(), scope);
 		bindSymbol("print", new Print(), scope);
-		bindSymbol("first", new First(), scope);
 		bindSymbol("quote", new Quote(), scope);
 		bindSymbol("if", new If(), scope);
 		bindSymbol("true", SparseBoolean.True, scope);
 		bindSymbol("false", SparseBoolean.False, scope);
 		bindSymbol("if", new If(), scope);
 		bindSymbol("let", new Let(), scope);
+		bindSymbol("list", new List(), scope);
+		bindSymbol("eval", new Eval(), scope);
+		bindSymbol("while", new While(), scope);
+		bindSymbol("import", new Import(this), scope);
+		
+		exposeType(SparseList.class);
+		exposeType(SparseInt.class);
+		exposeType(Entity.class);
+	}
+	
+	public void bindSymbol(String string, Entity entity, Scope scope) {
+		Symbol symbol = parseSymbol(new SparseToken(string, false));
+		scope.bind(symbol, entity);
 	}
 
 	public Code parseString(String code) {
-		SparseTokeniser toks = new SparseTokeniser(code);
-		return parse(toks);
+		tokens = new SparseTokeniser(code);
+		return parseCode();
 	}
 
-    private Code parse(SparseTokeniser toks)
+    private Code parseCode()
     {
     	Code code = new Code();
-    	while(toks.hasMore()) {
-    		SparseToken tok = nextToken(true, toks);
-    		Entity entity = null;
-    		entity = parseForm(tok, toks);
+    	while(tokens.hasMore()) {
+    		Entity entity = parseNextForm(true);
     		code.appendEntity(entity);
     	}
         return code;
     }
 
-    public void bindSymbol(String string, Entity entity, Scope scope) {
-		Symbol symbol = parseSymbol(new SparseToken(string));
-		scope.bind(symbol, entity);
-	}
-
-	public Entity parseForm(SparseToken tok, SparseTokeniser toks) {
+	public Entity parseNextForm(boolean canEnd) {
+		
+		SparseToken token = nextToken(canEnd);
 		Entity entity;
-		switch(tok.getType())
-        {
-            case SparseToken.LBRACKET:
-                entity = parseList(toks);
-                break;
-            case SparseToken.SYMBOL:
-            	entity = parseSymbol(tok);
-                break;
-            case SparseToken.STRING:
-            	entity = parseString(tok);
-                break;
-            default:
-                throw new SyntaxErrorException(tok, "Unexpected token. " +
-                                    "Expected a list, symbol or string");
-        }
+		switch(token.getType())
+		{
+		    case SparseToken.LBRACKET:
+		        entity = parseList();
+		        break;
+		    case SparseToken.SYMBOL:
+		    	entity = parseSymbol(token);
+		        break;
+		    case SparseToken.RBRACKET:
+		    	entity = null;
+		    	break;
+		    case SparseToken.STRING:
+		    	entity = parseString(token);
+		        break;
+		    case SparseToken.READER_MACRO:
+		    	entity = readerMacro();
+		    	break;
+		    default:
+		        throw new SyntaxErrorException(token, "Unexpected token. " +
+		                            "Expected a list, symbol or string");
+		}
 		return entity;
 	}
 
-    private SparseList parseList(SparseTokeniser toks)
+	private Entity readerMacro() {
+		SparseList sparseList = new SparseList();
+		sparseList.append(getSymbol("quote"));
+		sparseList.append(parseNextForm(false));
+		return sparseList;
+	}
+
+	private SparseList parseList()
     {
         SparseList list = new SparseList();
-        SparseToken tok = nextToken(false, toks);
-        while(tok != null)
-        {
-            switch(tok.getType())
-            {
-                case SparseToken.LBRACKET:
-                    list.append(parseList(toks));
-                    break;
-                case SparseToken.SYMBOL:
-                    list.append(parseSymbol(tok));
-                    break;
-                case SparseToken.RBRACKET:
-                	return list;
-                case SparseToken.STRING:
-                    list.append(parseString(tok));
-                    break;
-                default:
-                    throw new SyntaxErrorException(tok, "Unexpected token. " +
-                    "Expected a list, symbol or string");
-            }
-            tok = nextToken(false, toks);
+        boolean elementAppended = true;
+        while(elementAppended) {
+        	elementAppended = appendNextListElement(list);
         }
         return list;
     }
 
+	private boolean appendNextListElement(SparseList list) {
+		Entity entity = parseNextForm(false);
+		boolean addingElement = entity != null;
+		if(addingElement) {
+			list.append(entity);
+		}
+		return addingElement;
+	}
 
-
-    private Symbol parseSymbol(SparseToken tok)
+    private Symbol parseSymbol(SparseToken token)
     {
-        String str = tok.getToken();
+        String str = token.getToken();
         Symbol s;
         try {
             s = SparseInt.valueOf(str);
@@ -133,21 +148,20 @@ public class Sparser
         return s;
     }
 
-    private SparseString parseString(SparseToken tok)
+    private Entity parseString(SparseToken token)
     {
-        return new SparseString(tok.getToken().substring(1, tok.getToken().length() - 1));
+        return new SparseString(token.getToken().substring(1, token.getToken().length() - 1));
     }
 
     /**
      * Returns the next token from the tokeniser.
-     *
      * @param canEnd If true it is not a syntax error if there are no
      * more tokens. If false and there are no more tokens a SyntaxErrorException
      * will be thrown.
      */
-    private SparseToken nextToken(boolean canEnd, SparseTokeniser toks)
+    private SparseToken nextToken(boolean canEnd)
     {
-        SparseToken tok = (SparseToken)toks.next();
+        SparseToken tok = (SparseToken)tokens.next();
         if(tok == null && !canEnd)
         {
             throw new SyntaxErrorException(tok, "Premature end of input.");
@@ -158,4 +172,19 @@ public class Sparser
 	public Symbol getSymbol(String symName) {
 		return symbols.getSymbol(symName);
 	}
+
+	public void exposeType(Class<? extends Entity> type) {
+		Method[] methods = type.getMethods();
+		for (Method method : methods) {
+			Annotation[] declaredAnnotations = method.getDeclaredAnnotations();
+			for (int i = 0; i < declaredAnnotations.length; i++) {
+				Annotation annotation = declaredAnnotations[i];
+				if(annotation instanceof ExposedSparseFunction) {
+					ExposedSparseFunction exposedFunction = (ExposedSparseFunction) annotation;
+					bindSymbol(exposedFunction.name(), new ExposedFunction(exposedFunction, method), globalScope);
+				}
+			}
+		}
+	}
 }
+

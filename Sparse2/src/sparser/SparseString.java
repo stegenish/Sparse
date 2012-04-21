@@ -6,6 +6,8 @@
 
 package sparser;
 
+import static sparser.SparseBoolean.toSparseBoolean;
+
 public class SparseString implements Entity
 {
     private String string;
@@ -40,4 +42,14 @@ public class SparseString implements Entity
     public int hashCode() {
     	return string.hashCode();
     }
+
+	@Override
+	public String createString() {
+		return "\"" + getString() + "\"";
+	}
+
+	@Override
+	public SparseBoolean equal(Object other) {
+		return toSparseBoolean(equals(other));
+	}
 }

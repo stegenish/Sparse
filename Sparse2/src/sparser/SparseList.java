@@ -3,6 +3,8 @@ package sparser;
 import java.util.ArrayList;
 import java.util.Iterator;
 
+import static sparser.SparseBoolean.toSparseBoolean;
+
 public class SparseList implements Entity, Iterable<Entity> {
 
 	SparseListNode first = null;
@@ -15,26 +17,33 @@ public class SparseList implements Entity, Iterable<Entity> {
 	}
 
 	public SparseList() {
-		//default constructor
 	}
+	
 	public Entity execute(Scope scope) {
 		return first.execute(scope);
 	}
-	public void addFront(SparseList list) {
+	
+	public SparseList insertFront(SparseList list) {
 		if(first == null) {
 			first = list.first;
 		} else {
-			first.addFront(list.first);
+			first.insertFront(list.first);
 			first = list.first;
 		}
+		return this;
 	}
-	public void addLast(SparseList list) {
+	
+	@ExposedSparseFunction(name="concat")
+	public SparseList insertEnd(SparseList list) {
 		if(first == null) {
 			first = list.first;
 		} else {
-			first.addLast(list.first);
+			first.insertEnd(list.first);
 		}
+		return this;
 	}
+
+	@ExposedSparseFunction(name="append")
 	public void append(Entity elem) {
 		if(first == null) {
 			first = new SparseListNode(elem);
@@ -42,18 +51,26 @@ public class SparseList implements Entity, Iterable<Entity> {
 			first.append(elem);
 		}
 	}
-	public StringBuffer createString(SparseListNode node, int level) {
-		return first.createString(node, level);
-	}
-
+	
+	@ExposedSparseFunction(name="first")
 	public Entity getFirstElement() {
 		return first.getElement();
+	}
+	
+	@ExposedSparseFunction(name="second")
+	public Entity getSecondElement() {
+		Entity element = SparseNull.theNull;
+		if(first.next != null) {
+			element = first.next.getElement();
+		}
+		return element;
 	}
 
 	public SparseList getLast() {
 		return new SparseList(first.getLast());
 	}
 
+	@ExposedSparseFunction(name="rest")
 	public SparseList getNext() {
 		if(first == null) {
 			return null;
@@ -95,203 +112,17 @@ public class SparseList implements Entity, Iterable<Entity> {
 	@Override
 	public boolean equals(Object obj) {
 		if(obj instanceof SparseList) {
-			return compareLists(obj);
+			return first.compareLists(obj);
 		}
 		return false;
 	}
 
-	private boolean compareLists(Object obj) {
-		Iterator<Entity> otherElements = ((SparseList) obj).iterator();
-		Iterator<Entity> thisElements = this.iterator();
-		while(otherElements.hasNext() && thisElements.hasNext()) {
-			Entity otherElement = otherElements.next();
-			Entity thisElement = thisElements.next();
-			if(!otherElement.equals(thisElement)) {
-				return false;
-			}
-		}
-		return otherElements.hasNext() == thisElements.hasNext();
+	public String createString() {
+		return first.createString();
 	}
 
-	public class SparseListNode implements Entity, Iterable<Entity>
-	{
-	    /**
-	     * Holds the element of this list node.
-	     */
-
-	    protected Entity element;
-	    /**
-	     * The next node in the list. Set to null if this is the last
-	     * element.
-	     */
-	    protected SparseListNode next;
-	    
-	    public SparseListNode(Entity elem)
-	    {
-	        next = null;
-	        element = elem;
-	    }
-
-	    /**
-	     * Get the next node in the list.
-	     */
-	    public SparseListNode getNext()
-	    {
-	        return next;
-	    }
-
-	    /**
-	     * Sets the next node for this SparseList node.
-	     */
-	    public void setNext(SparseListNode newNext)
-	    {
-	        next = newNext;
-	    }
-
-	    /**
-	     * Returns the last element in this list.
-	     */
-	    public SparseListNode getLast()
-	    {
-	        SparseListNode tmp = this;
-	        while(tmp.getNext() != null)
-	        {
-	            tmp = tmp.getNext();
-	        }
-	        return tmp;
-	    }
-
-	    /**
-	     * Appends list to this list.
-	     */
-	    public void addLast(SparseListNode list)
-	    {
-	        getLast().setNext(list);
-	    }
-
-	    /**
-	     * Adds list to the front of this list. If list holds more than
-	     * one element, the last element of list will be made to point to
-	     * the first element in this list.
-	     * Note that list1.addFront(list2) is the same as list2.addLast(list1).
-	     * Running time is the same in both cases.
-	     */
-	    public void addFront(SparseListNode list)
-	    {
-	        list.getLast().setNext(this);
-	    }
-
-	    public Entity getElement()
-	    {
-	        return element;
-	    }
-
-	    public void setElement(Entity elem)
-	    {
-	        element = elem;
-	    }
-
-	    public void append(Entity elem) {
-	    	if(next != null) {
-	    		next.append(elem);
-	    	} else {
-	    		next = new SparseListNode(elem);
-	    	}
-	    }
-
-	    public Entity execute(Scope scope) {
-	        Callable fun = getFunction(scope);
-	        ArgumentList args = createArgumentList();
-	        return fun.callWithScope(args, scope);
-	    }
-
-		private ArgumentList createArgumentList() {
-			ArgumentList args = ArgumentList.createArgumentList();
-			SparseListNode listNode = getNext();
-			while(listNode != null) {
-				args.addArg(listNode.getElement());
-			    listNode = listNode.getNext();
-			}
-			return args;
-		}
-
-		private Callable getFunction(Scope scope) {
-			Callable fun;
-	        try {
-	            fun = (Callable)(getElement().execute(scope));
-	            if(fun == null) {
-	            	throw new FunctionCallException("No function bound to " + getElement().toString());
-	            }
-	        }
-	        catch(ClassCastException e) {
-	            throw new FunctionCallException("No function bound to " + getElement().toString());
-	        }
-			return fun;
-		}
-
-	    public String toString()
-	    {
-	        if(getElement() == null)
-	        {
-	            return "()";
-	        }
-	        else
-	        {
-	            return createString(this, 0).toString();
-	        }
-	    }
-
-	    public StringBuffer createString(SparseListNode node,  int level)
-	    {
-	        StringBuffer str = new StringBuffer();
-	        SparseListNode tmp = node;
-	        str.append('(');
-	        do
-	        {
-	            if(tmp.getElement() instanceof SparseList)
-	            {
-	                str.append(createString(((SparseList)tmp.getElement()).first, level));
-	                str.setLength(str.length() - 1);
-	                str.append(") ");
-	            }
-	            else if(tmp.getElement() instanceof SparseString)
-	            {
-	                str.append("\"" + ((SparseString)tmp.getElement()).getString() + "\" ");
-	            }
-	            else if(tmp.getElement() instanceof Symbol)
-	            {
-	                str.append(((Symbol)tmp.getElement()).getName() + " ");
-	            }
-	            tmp = tmp.getNext();
-	        }while(tmp != null);
-	        str.setLength(str.length() - 1);
-	        str.append(")");
-	        return str;
-	    }
-
-	    class SparseListIterator implements Iterator<Entity> {
-
-	    	private SparseListNode current = SparseListNode.this;
-
-	    	public boolean hasNext() {
-				return current != null;
-			}
-
-			public Entity next() {
-				Entity entity = current.element;
-				current = current.next;
-				return entity;
-			}
-
-			public void remove() {
-				throw new UnsupportedOperationException();
-			}
-	    }
-
-	    public Iterator<Entity> iterator() {
-			return this.new SparseListIterator();
-		}
-
+	@Override
+	public SparseBoolean equal(Object other) {
+		return toSparseBoolean(this.equals(other));
 	}
-
 }

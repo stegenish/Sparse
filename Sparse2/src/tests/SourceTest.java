@@ -26,4 +26,8 @@ public class SourceTest extends SparserSourceTestCase {
 	public void testIf() throws Exception {
 		run("iftest.sp");
 	}
+	
+	public void testImport() throws Exception {
+		run("importTest.sp");
+	}
 }

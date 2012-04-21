@@ -14,8 +14,9 @@ public class Print extends Function {
 	@Override
 	public Entity callImplementation(ArgumentList args, Scope scope) {
 		while(args.hasNext()) {
-			System.out.println(args.next().toString());
+			System.out.print(args.next().toString());
 		}
+		System.out.println();
 		return null;
 	}
 
