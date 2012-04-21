@@ -124,7 +124,7 @@ public class SparseListNode implements Entity, Iterable<Entity>
 		return this.new SparseListIterator();
 	}
     
-    private class SparseListIterator implements Iterator<Entity> {
+    protected class SparseListIterator implements Iterator<Entity> {
 
     	private SparseListNode current = SparseListNode.this;
 
