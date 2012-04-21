@@ -87,8 +87,6 @@ public class SparseListNode implements Entity, Iterable<Entity>
 		return args;
 	}
 	
-	
-
 	private Callable getFunction(Scope scope) {
 		Callable fun;
         try {
