@@ -47,6 +47,7 @@ public class SparseSourceRunner {
 			System.err.println("Exception thrown and not caught:");
 			System.err.println(e.getMessage());
 			System.err.print(e.getTrace());
+			e.printStackTrace();
 			throw e;
 		}
 	}

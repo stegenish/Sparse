@@ -1,2 +1,2 @@
 (defspecial defmacro (name params (rest body))
-   (eval something...))
+   (eval (concat (list 'defspecial name params) body)))

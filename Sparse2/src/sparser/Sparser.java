@@ -55,6 +55,7 @@ public class Sparser
 		bindSymbol("list", new List(), scope);
 		bindSymbol("eval", new Eval(), scope);
 		bindSymbol("while", new While(), scope);
+		bindSymbol("null", SparseNull.theNull, scope);
 		bindSymbol("import", new Import(this), scope);
 		
 		exposeType(SparseList.class);

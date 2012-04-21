@@ -118,7 +118,11 @@ public class SparseList implements Entity, Iterable<Entity> {
 	}
 
 	public String createString() {
-		return first.createString();
+		if(first != null) {
+			return first.createString();
+		} else {
+			return "()";
+		}
 	}
 
 	@Override

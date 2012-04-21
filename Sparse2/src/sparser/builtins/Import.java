@@ -3,13 +3,13 @@ package sparser.builtins;
 import sparser.ArgumentList;
 import sparser.Code;
 import sparser.Entity;
-import sparser.Function;
 import sparser.Scope;
 import sparser.SparseSourceRunner;
 import sparser.SparseString;
 import sparser.Sparser;
+import sparser.SpecialForm;
 
-public class Import extends Function implements Entity {
+public class Import extends SpecialForm implements Entity {
 
 	private Sparser sparser;
 

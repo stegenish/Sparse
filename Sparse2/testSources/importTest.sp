@@ -1,2 +1,2 @@
-(import "/home/thomas/development/Sparse/Sparse2/testSources/binda.sp")
+(import "testSources/binda.sp")
 (assert 42 a)
