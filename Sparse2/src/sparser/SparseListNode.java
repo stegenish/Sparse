@@ -10,13 +10,18 @@ public class SparseListNode implements Entity, Iterable<Entity>
 
     protected SparseListNode next;
     
+    public SparseListNode() {
+    	next = null;
+    	element = null;
+	}
+    
     public SparseListNode(Entity elem)
     {
         next = null;
         element = elem;
     }
 
-    public SparseListNode getNext()
+	public SparseListNode getNext()
     {
         return next;
     }
@@ -74,7 +79,9 @@ public class SparseListNode implements Entity, Iterable<Entity>
     public Entity execute(Scope scope) {
         Callable fun = getFunction(scope);
         ArgumentList args = createArgumentList();
-        return fun.callWithScope(args, scope);
+        Entity returnValue = fun.callWithScope(args, scope);
+        //System.out.println(getElement().toString() + " Returns " + returnValue.toString());
+		return returnValue;
     }
 
 	private ArgumentList createArgumentList() {
@@ -90,6 +97,7 @@ public class SparseListNode implements Entity, Iterable<Entity>
 	private Callable getFunction(Scope scope) {
 		Callable fun;
         try {
+        	//System.out.println("Calling: " + getElement().toString());
             fun = (Callable)(getElement().execute(scope));
             if(fun == null) {
             	throw new FunctionCallException("No function bound to " + getElement().toString());

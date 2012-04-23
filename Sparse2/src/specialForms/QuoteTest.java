@@ -15,8 +15,8 @@ public class QuoteTest extends SparserTestCase {
 		Entity code = parseEntity("(quote (1 2 3))");
 		SparseList list = (SparseList) code.execute(globalScope);
 		assertEquals(SparseInt.valueOf(1), list.getFirstElement());
-		SparseList rest = list.getNext();
+		SparseList rest = (SparseList) list.rest();
 		assertEquals(SparseInt.valueOf(2), rest.getFirstElement());
-		assertEquals(SparseInt.valueOf(3), rest.getNext().getFirstElement());
+		assertEquals(SparseInt.valueOf(3), ((SparseList) rest.rest()).getFirstElement());
 	}
 }

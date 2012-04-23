@@ -37,8 +37,10 @@ public abstract class Callable implements Entity
 
 	private Entity call(ArgumentList args, Scope scope) {
 		ArgumentList processedArguments = argumentProcessor.processArguments(args, scope);
+		//processedArguments.dump();
 		Scope newScope = scopeSemantics.createNewScope(scope);
-		return callImplementation(processedArguments, newScope);
+		Entity returnValue = callImplementation(processedArguments, newScope);
+		return returnValue;
 	}
 
     protected abstract Entity callImplementation(ArgumentList args, Scope scope);
@@ -50,5 +52,9 @@ public abstract class Callable implements Entity
 	@Override
 	public SparseBoolean equal(Object other) {
 		return toSparseBoolean(this == other);
+	}
+
+	public String getName() {
+		return name;
 	}
 }

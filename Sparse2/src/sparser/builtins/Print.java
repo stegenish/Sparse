@@ -4,6 +4,7 @@ import sparser.ArgumentList;
 import sparser.Entity;
 import sparser.Function;
 import sparser.Scope;
+import sparser.SparseNull;
 
 public class Print extends Function {
 
@@ -18,7 +19,6 @@ public class Print extends Function {
 			System.out.print(next.toString());
 		}
 		System.out.println();
-		return null;
+		return SparseNull.theNull;
 	}
-
 }

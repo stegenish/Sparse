@@ -18,7 +18,7 @@ public class FunctionBody {
 				} else {
 					SparseList param = (SparseList) parameter;
 					param.getFirstElement();
-					Symbol symbol = (Symbol) param.getNext().getFirstElement();
+					Symbol symbol = (Symbol) ((SparseList)param.rest()).getFirstElement();
 					SparseList restList = new SparseList();
 					while(args.hasNext()) {
 						restList.append(args.next());

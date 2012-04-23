@@ -28,7 +28,8 @@ public class ExposedFunction extends Function {
 	private Object[] createParameters(ArgumentList args) {
 		Object[] objects = new Object [getNumberOfParameters()];
 		for (int i = 0; i < objects.length; i++) {
-			objects[i] = args.next();
+			Entity nextArg = args.next();
+		    objects[i] = nextArg;
 		}
 		return objects;
 	}
@@ -43,6 +44,10 @@ public class ExposedFunction extends Function {
 		} catch (IllegalAccessException e) {
 			e.printStackTrace();
 		} catch (IllegalArgumentException e) {
+			System.out.println("Exposed Function " + getName());
+			for(Object o : parameters) {
+				System.out.print(o.toString() + " " + o.getClass().toString());
+			}
 			e.printStackTrace();
 		} catch (InvocationTargetException e) {
 			e.printStackTrace();

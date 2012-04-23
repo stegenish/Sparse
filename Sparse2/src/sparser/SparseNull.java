@@ -12,9 +12,14 @@ public class SparseNull implements Entity {
 	public Entity execute(Scope scope) {
 		return this;
 	}
+	
+	@Override
+	public String toString() {
+		return "null";
+	}
 
 	public String createString() {
-		return null;
+		return "null";
 	}
 
 	@Override

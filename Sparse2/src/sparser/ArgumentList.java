@@ -54,4 +54,11 @@ public class ArgumentList
         }
         return args.get(next++);
     }
+
+	public void dump() {
+		for(Entity arg : args) {
+			System.out.print(arg.toString() + ", ");
+		}
+		System.out.println();
+	}
 }

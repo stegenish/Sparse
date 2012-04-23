@@ -7,84 +7,73 @@ import static sparser.SparseBoolean.toSparseBoolean;
 
 public class SparseList implements Entity, Iterable<Entity> {
 
-	SparseListNode first = null;
-	public SparseList(Entity entity) {
-		first = new SparseListNode(entity);
-	}
-
-	private SparseList(SparseListNode node) {
-		first = node;
-	}
+	SparseListNode first;
 
 	public SparseList() {
 	}
-	
+
 	public Entity execute(Scope scope) {
 		return first.execute(scope);
 	}
-	
-	public SparseList insertFront(SparseList list) {
-		if(first == null) {
-			first = list.first;
-		} else {
-			first.insertFront(list.first);
-			first = list.first;
-		}
-		return this;
-	}
-	
-	@ExposedSparseFunction(name="concat")
+
+	@ExposedSparseFunction(name = "concat")
 	public SparseList insertEnd(SparseList list) {
-		if(first == null) {
-			first = list.first;
-		} else {
-			first.insertEnd(list.first);
+		if (list != null) {
+			if (first == null) {
+				first = list.first;
+			} else {
+				first.insertEnd(list.first);
+			}
 		}
 		return this;
 	}
 
-	@ExposedSparseFunction(name="append")
+	@ExposedSparseFunction(name = "append")
 	public void append(Entity elem) {
-		if(first == null) {
+		if (first == null) {
 			first = new SparseListNode(elem);
+			first.setElement(elem);
 		} else {
 			first.append(elem);
 		}
 	}
-	
-	@ExposedSparseFunction(name="first")
+
+	@ExposedSparseFunction(name = "first")
 	public Entity getFirstElement() {
-		return first.getElement();
+		if (first == null) {
+			return SparseNull.theNull;
+		} else {
+			return first.getElement();
+		}
 	}
 	
-	@ExposedSparseFunction(name="second")
-	public Entity getSecondElement() {
-		Entity element = SparseNull.theNull;
-		if(first.next != null) {
-			element = first.next.getElement();
+	@ExposedSparseFunction(name = "rest")
+	public Entity rest() {
+		if (first == null) {
+			return SparseNull.theNull;
+		} else {
+			SparseList sparseList = new SparseList();
+			sparseList.first = first.getNext();
+			return sparseList;
 		}
-		return element;
 	}
 
 	public SparseList getLast() {
-		return new SparseList(first.getLast());
+		SparseList sparseList = new SparseList();
+		sparseList.first = first.getLast();
+		return sparseList;
 	}
 
-	@ExposedSparseFunction(name="rest")
-	public SparseList getNext() {
-		if(first == null) {
-			return null;
-		} else {
-			return new SparseList(first.getNext());
-		}
-	}
+	
+
+	
 
 	public int hashCode() {
 		return first.hashCode();
 	}
 
 	public Iterator<Entity> iterator() {
-		if(first == null) {
+		if (first == null) {
 			return new ArrayList<Entity>().iterator();
 		}
 		return first.iterator();
@@ -99,7 +88,7 @@ public class SparseList implements Entity, Iterable<Entity> {
 	}
 
 	public String toString() {
-		if(first == null) {
+		if (first == null) {
 			return "()";
 		}
 		return first.toString();
@@ -111,14 +100,14 @@ public class SparseList implements Entity, Iterable<Entity> {
 
 	@Override
 	public boolean equals(Object obj) {
-		if(obj instanceof SparseList) {
+		if (obj instanceof SparseList) {
 			return first.compareLists(obj);
 		}
 		return false;
 	}
 
 	public String createString() {
-		if(first != null) {
+		if (first != null) {
 			return first.createString();
 		} else {
 			return "()";

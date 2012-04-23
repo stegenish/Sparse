@@ -44,7 +44,7 @@ public class SparseListTest extends SparserTestCase
 
     public void testGets()
     {
-        assertNull(list1.getNext());
+        assertEquals(SparseNull.theNull, list1.rest());
     }
 
 
@@ -55,18 +55,7 @@ public class SparseListTest extends SparserTestCase
     	list2.append(SparseInt.valueOf("3"));
     	list2.append(SparseInt.valueOf("4"));
     	list1.insertEnd(list2);
-    	SparseInt num = (SparseInt)list1.getNext().getNext().getNext().getFirstElement();
-    	assertEquals(SparseInt.valueOf("4"), num);
-    }
-
-    public void testAddFront()
-    {
-    	list1.append(SparseInt.valueOf("1"));
-    	list1.append(SparseInt.valueOf("2"));
-    	list2.append(SparseInt.valueOf("3"));
-    	list2.append(SparseInt.valueOf("4"));
-    	list1.insertFront(list2);
-    	SparseInt num = (SparseInt)list1.getNext().getFirstElement();
+    	SparseInt num = (SparseInt)((SparseList) ((SparseList) ((SparseList) list1.rest()).rest()).rest()).getFirstElement();
     	assertEquals(SparseInt.valueOf("4"), num);
     }
 

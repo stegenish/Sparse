@@ -3,6 +3,7 @@ package specialForms;
 import sparser.ArgumentList;
 import sparser.Entity;
 import sparser.Scope;
+import sparser.SparseNull;
 import sparser.SpecialForm;
 import sparser.Symbol;
 
@@ -19,6 +20,6 @@ public class Bind extends SpecialForm {
 		Entity value = args.next().execute(scope);
 		Symbol symbol = (Symbol)args.next();
 		globalScope.bind(symbol, value);
-		return null;
+		return SparseNull.theNull;
 	}
 }
