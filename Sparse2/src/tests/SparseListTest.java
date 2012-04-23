@@ -44,9 +44,9 @@ public class SparseListTest extends SparserTestCase
 
     public void testGets()
     {
-        assertEquals(SparseNull.theNull, list1.rest());
+    	list1 = new SparseList();
+        assertEquals(new SparseList(), list1.rest());
     }
-
 
     public void testAddLast()
     {
@@ -65,7 +65,6 @@ public class SparseListTest extends SparserTestCase
         parser = new Sparser(globalScope);
         SparseList sl = parse(parser, str);
         assertEquals(str, sl.toString());
-
 
         str = "(hello)";
         parser = new Sparser(globalScope);

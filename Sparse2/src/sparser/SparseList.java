@@ -1,121 +1,150 @@
 package sparser;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-
 import static sparser.SparseBoolean.toSparseBoolean;
 
+import java.util.Iterator;
+
 public class SparseList implements Entity, Iterable<Entity> {
-
-	SparseListNode first;
-
-	public SparseList() {
+	
+	private Entity element;
+    private SparseList next;
+	
+	private SparseList next() {
+		return next;
 	}
-
-	public Entity execute(Scope scope) {
-		return first.execute(scope);
+	
+	private Entity element() {
+		return element;
+	}
+	
+	private void next(SparseList node) {
+		next = node;
+	}
+	
+	private void element(Entity elem) {
+		element = elem;
+	}
+	
+	public SparseList() {
 	}
 
 	@ExposedSparseFunction(name = "concat")
 	public SparseList insertEnd(SparseList list) {
-		if (list != null) {
-			if (first == null) {
-				first = list.first;
-			} else {
-				first.insertEnd(list.first);
-			}
+		if(next() == null) {
+			next(list);
+		} else {
+			next().insertEnd(list);
 		}
 		return this;
 	}
 
 	@ExposedSparseFunction(name = "append")
 	public void append(Entity elem) {
-		if (first == null) {
-			first = new SparseListNode(elem);
-			first.setElement(elem);
-		} else {
-			first.append(elem);
-		}
+		if(element() == null) {
+    		element(elem);
+    	} else if(next() == null) {
+    		next(new SparseList());
+    		next().append(elem);
+    	} else {
+    		next().append(elem);
+    	}
 	}
 
 	@ExposedSparseFunction(name = "first")
 	public Entity getFirstElement() {
-		if (first == null) {
-			return SparseNull.theNull;
-		} else {
-			return first.getElement();
-		}
+		return element();
 	}
 	
 	@ExposedSparseFunction(name = "rest")
 	public Entity rest() {
-		if (first == null) {
-			return SparseNull.theNull;
+		SparseList sparseList;
+		SparseList restNodes = next();
+		if(restNodes != null) {
+			sparseList = restNodes;
 		} else {
-			SparseList sparseList = new SparseList();
-			sparseList.first = first.getNext();
-			return sparseList;
+			sparseList = new SparseList();
 		}
-	}
-
-	public SparseList getLast() {
-		SparseList sparseList = new SparseList();
-		sparseList.first = first.getLast();
 		return sparseList;
 	}
 
-	
-
-	
-
-	public int hashCode() {
-		return first.hashCode();
-	}
-
 	public Iterator<Entity> iterator() {
-		if (first == null) {
-			return new ArrayList<Entity>().iterator();
-		}
-		return first.iterator();
-	}
-
-	public void setElement(Entity elem) {
-		first.setElement(elem);
-	}
-
-	public void setNext(SparseListNode newNext) {
-		first.setNext(newNext);
+		return new SparseListIterator(this);
 	}
 
 	public String toString() {
-		if (first == null) {
-			return "()";
-		}
-		return first.toString();
+		return createString();
 	}
 
-	public boolean isEmpty() {
-		return first == null;
+	public boolean isNil() {
+		return element() == null && next() == null;
 	}
 
 	@Override
 	public boolean equals(Object obj) {
 		if (obj instanceof SparseList) {
-			return first.compareLists(obj);
+			Iterator<Entity> otherElements = ((SparseList)obj).iterator();
+			Iterator<Entity> thisElements = iterator();
+			while(otherElements.hasNext() && thisElements.hasNext()) {
+				Entity otherElement = otherElements.next();
+				Entity thisElement = thisElements.next();
+				if(!otherElement.equals(thisElement)) {
+					return false;
+				}
+			}
+			return otherElements.hasNext() == thisElements.hasNext();
 		}
 		return false;
 	}
 
 	public String createString() {
-		if (first != null) {
-			return first.createString();
-		} else {
-			return "()";
+		StringBuffer str = new StringBuffer();
+		str.append('(');
+		for(Entity node : this) {
+			str.append(node.createString()).append(" ");
 		}
+		str.setLength(str.length() - 1);
+		str.append(")");
+		return str.toString();
 	}
 
 	@Override
 	public SparseBoolean equal(Object other) {
 		return toSparseBoolean(this.equals(other));
+	}
+
+	@Override
+	public int hashCode() {
+		return super.hashCode();
+	}
+	
+	public Entity execute(Scope scope) {
+		Callable fun = getFunction(scope);
+		ArgumentList args = createArgumentList();
+		Entity returnValue = fun.callWithScope(args, scope);
+		return returnValue;
+	}
+
+	private ArgumentList createArgumentList() {
+		ArgumentList args = ArgumentList.createArgumentList();
+		SparseList listNode = next();
+		while(listNode != null) {
+			args.addArg(listNode.element());
+		    listNode = listNode.next();
+		}
+		return args;
+	}
+
+	private Callable getFunction(Scope scope) {
+		Callable fun;
+		try {
+		    fun = (Callable)(element().execute(scope));
+		    if(fun == null) {
+		    	throw new FunctionCallException("No function bound to " + element().toString());
+		    }
+		}
+		catch(ClassCastException e) {
+		    throw new FunctionCallException("No function bound to " + element().toString());
+		}
+		return fun;
 	}
 }

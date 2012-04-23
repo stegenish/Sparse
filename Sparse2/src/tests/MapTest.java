@@ -4,7 +4,10 @@ package tests;
 
 public class MapTest extends SparserSourceTestCase {
 
-	public void testMap() throws Exception {
-		run("mapTest.sp");
+	public void testname() throws Exception {
+		
 	}
+	//public void testMap() throws Exception {
+	//	run("mapTest.sp");
+	//}
 }

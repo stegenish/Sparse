@@ -81,7 +81,7 @@ public class SparserTest extends SparserTestCase
         assertEquals("good", s.getName());
         SparseList l = (SparseList) list.rest();
         assertNotNull(l);
-        assertTrue(((SparseList) l.rest()).isEmpty());
+        assertTrue(((SparseList) l.rest()).isNil());
         assertTrue(l.getFirstElement() instanceof Symbol);
     }
 
@@ -96,7 +96,7 @@ public class SparserTest extends SparserTestCase
         assertTrue(l.getFirstElement() instanceof Symbol);
         l = (SparseList) l.rest();
         assertNotNull(l);
-        assertTrue(((SparseList) l.rest()).isEmpty());
+        assertTrue(((SparseList) l.rest()).isNil());
         assertTrue(l.getFirstElement() instanceof Symbol);
     }
 
@@ -132,8 +132,8 @@ public class SparserTest extends SparserTestCase
         s = (Symbol)(l2.getFirstElement());
         assertEquals("list", s.getName());
 
-        assertTrue(((SparseList) l2.rest()).isEmpty());
-        assertTrue(((SparseList) l.rest()).isEmpty());
+        assertTrue(((SparseList) l2.rest()).isNil());
+        assertTrue(((SparseList) l.rest()).isNil());
     }
 
 	private List<Entity> parseStr(String str) {
