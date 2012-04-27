@@ -29,7 +29,7 @@ public class Add extends Function
         BigInteger result = new BigInteger("0");
         while(args.hasNext())
         {
-            SparseInt sparseValue = (SparseInt) args.next();
+            SparseInt sparseValue = args.getIntArgument();
 			BigInteger intValue = sparseValue.getValue();
 			result = result.add(intValue);
         }

@@ -15,6 +15,10 @@ public class SparseException extends RuntimeException {
 		super(string);
 	}
 
+	public SparseException(String string, Exception e) {
+		super(string, e);
+	}
+
 	public void addTrace(String trace) {
 		stackTrace.add(trace);
 	}

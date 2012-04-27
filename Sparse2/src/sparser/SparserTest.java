@@ -18,41 +18,37 @@ public class SparserTest extends SparserTestCase {
 	}
 	
 	public void testSparserExposedFunctionCanBeCalled() throws Exception {
-		Code code = parseString("(concat '(a b) '(c d))");
-		Entity concattedList = code.execute(globalScope);
+		Entity concattedList = executeString("(concat '(a b) '(c d))");
 		Entity expectedList = parser.parseString("(a b c d)").getEntities().get(0);
 		assertEquals(expectedList, concattedList);
 	}
 	
 	public void testFirstExposed() throws Exception {
-		Code code = parseString("(first (list 1 2 3))");
-		Entity firstElement = code.execute(globalScope);
+		Entity firstElement = executeString("(first (list 1 2 3))");
 		assertEquals(SparseInt.valueOf(1), firstElement);
 	}
-	
+
 	public void testLessThanExposed() throws Exception {
-		Code code = parseString("(< 1 2)");
-		assertEquals(SparseBoolean.True, code.execute(globalScope));
+		assertEquals(SparseBoolean.True, executeString("(< 1 2)"));
 	}
 
 	public void testEqualExposed() throws Exception {
-		Entity result = parseString("(equal 1 1)").execute(globalScope);
+		Entity result = executeString("(equal 1 1)");
 		assertEquals(SparseBoolean.True, result);
 	}
 	
 	public void testEqualExposed2() throws Exception {
-		Entity result = parseString("(equal 1 2)").execute(globalScope);
+		Entity result = executeString("(equal 1 2)");
 		assertEquals(SparseBoolean.False, result);
 	}
 	
 	public void testEqualExposedForString() throws Exception {
-		Entity result = parseString("(equal \"1asd\" \"1asd\")").execute(globalScope);
+		Entity result = executeString("(equal \"1asd\" \"1asd\")");
 		assertEquals(SparseBoolean.True, result);
 	}
 	
 	public void testRestExposed() throws Exception {
-		Code code = parseString("(rest (list 1 2 3))");
-		Entity theRest = code.execute(globalScope);
+		Entity theRest = executeString("(rest (list 1 2 3))");
 		Entity expectedValue = parser.parseString("(2 3)").getEntities().get(0);
 		assertEquals(expectedValue, theRest);
 	}
@@ -65,5 +61,20 @@ public class SparserTest extends SparserTestCase {
 			thrownException = e;
 		}
 		assertTrue(thrownException instanceof SyntaxErrorException);
+	}
+	
+	public void testStackTraceContainsIndexOfIncorrectParameter() throws Exception {
+		try {
+			executeString("(add (list 1) 1)");
+		} catch (Exception e) {
+			assertTrue(e.getMessage(), e.getMessage().contains("argument 1"));
+			e.printStackTrace();
+		}
+	}
+	
+	private Entity executeString(String str) {
+		Code code = parseString(str);
+		Entity firstElement = code.execute(globalScope);
+		return firstElement;
 	}
 }

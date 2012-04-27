@@ -8,4 +8,5 @@
    (print lst)
    (if (equal (first lst) null)
        null
-     (concat (list (fun (first lst))) (map (rest lst) fun))))
+     (concat (list (fun (first lst))) 
+	     (map (rest lst) fun))))

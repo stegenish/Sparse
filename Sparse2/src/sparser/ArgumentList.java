@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 
+
 /**
  * Represents a list of arguments sent to a function.
  *
@@ -16,7 +17,7 @@ public class ArgumentList
     /**
      * For iterating over the arguments
      */
-    private int next;
+    public int next;
     /** Creates a new instance of ArgumentList */
     private ArgumentList()
     {
@@ -46,7 +47,7 @@ public class ArgumentList
         return next < args.size();
     }
 
-    public Entity next()
+	public Entity next()
     {
         if(!hasNext())
         {
@@ -60,5 +61,13 @@ public class ArgumentList
 			System.out.print(arg.toString() + ", ");
 		}
 		System.out.println();
+	}
+
+	public SparseInt getIntArgument() {
+		try {
+			return (SparseInt) next();
+		} catch (ClassCastException e) {
+			throw new SparseException("argument " + next, e);
+		}
 	}
 }
