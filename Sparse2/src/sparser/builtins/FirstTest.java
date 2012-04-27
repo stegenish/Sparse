@@ -22,8 +22,11 @@ public class FirstTest extends SparserTestCase {
 	}
 
 	public void testListInCode() throws Exception {
-		Entity code = parseEntity("(first (quote (3 2 1)))");
-		Entity value = code.execute(globalScope);
+		Entity value = executeString("(first (quote (3 2 1)))");
 		assertEquals(SparseInt.valueOf(3), value);
+	}
+	
+	public void testArgumentMustBeList() throws Exception {
+		checkIncorrectArgument("(first \"asd\")", "argument 1");
 	}
 }

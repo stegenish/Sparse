@@ -64,17 +64,26 @@ public class SparserTest extends SparserTestCase {
 	}
 	
 	public void testStackTraceContainsIndexOfIncorrectParameter() throws Exception {
-		try {
-			executeString("(add (list 1) 1)");
-		} catch (Exception e) {
-			assertTrue(e.getMessage(), e.getMessage().contains("argument 1"));
-			e.printStackTrace();
-		}
+		checkIncorrectArgument("(add (list 1) 1)", "argument 1");
+	}
+
+	public void testStackTraceContainsIndexOfIncorrectParameter2() throws Exception {
+		checkIncorrectArgument("(add 1 (list 1))", "argument 2");
 	}
 	
-	private Entity executeString(String str) {
-		Code code = parseString(str);
-		Entity firstElement = code.execute(globalScope);
-		return firstElement;
+	public void testStackTraceContainsNameOfFunction() throws Exception {
+		checkIncorrectArgument("(add 1 (list 1))", "add");
+	}
+	
+	public void testStackTraceContainsSourceOfError() throws Exception {
+		checkIncorrectArgument("(add 1 (list 1))", "source:");
+	}
+	
+	public void testStackTraceContainsSourceOfErrorAdditionalInformation() throws Exception {
+		checkIncorrectArgument("(add 1 (list 1))", "Cannot cast");
+	}
+	
+	public void testExposedFunctionChecksArgument() throws Exception {
+		checkIncorrectArgument("(concat (list 1) 1)", "argument 2");
 	}
 }

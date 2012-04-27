@@ -64,8 +64,8 @@ public class Sparser
 	}
 	
 	public void bindSymbol(String string, Entity entity, Scope scope) {
-		Symbol symbol = parseSymbol(new SparseToken(string, false));
-		scope.bind(symbol, entity);
+		String str = new SparseToken(string, false).getToken();
+		scope.bind(symbols.getSymbol(str), entity);
 	}
 
 	public Code parseString(String code) {

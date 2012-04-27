@@ -2,9 +2,8 @@ package specialForms;
 
 
 import sparser.ArgumentList;
-import sparser.Code;
-import sparser.Entity;
 import sparser.Callable;
+import sparser.Entity;
 import sparser.SparseList;
 import sparser.SparserTestCase;
 import sparser.Symbol;
@@ -47,10 +46,16 @@ public class DefunTest extends SparserTestCase {
 		func.callWithScope(passedArgs, scope);
 		assertEquals(sparseInt("9"), testFunction.lastCallArgs.next());
 	}
+	
+	public void testSecondArgumentMustBeSymbol() throws Exception {
+		checkIncorrectArgument("(defun \"asd\" () null)", "argument 1");
+	}
+	
+	public void testSecondArgumentCannotBeNumber() throws Exception {
+		checkIncorrectArgument("(defun 1 () null)", "argument 1");
+	}
 
 	private Callable parseFunction(String program) {
-		Code code = parser.parseString(program);
-        Callable func = (Callable) code.execute(globalScope);
-		return func;
+		return (Callable) executeString(program);
 	}
 }

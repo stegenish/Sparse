@@ -87,4 +87,14 @@ public class SparseInt extends Symbol
 	public static SparseInt valueOf(BigInteger bigInteger) {
 		return new SparseInt(bigInteger);
 	}
+
+	@Override
+	public String toString() {
+		return super.toString();
+	}
+	
+	@Override
+	public String createString() {
+		return toString();
+	}
 }

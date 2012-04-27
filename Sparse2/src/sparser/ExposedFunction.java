@@ -13,41 +13,37 @@ public class ExposedFunction extends Function {
 
 	@Override
 	protected Entity callImplementation(ArgumentList args, Scope scope) {
-		Entity object = args.next();
+		Entity object = getObject(args);
 		Object[] parameters = createParameters(args);
 		Object returnValue = callMethodOnObject(object, parameters);
 		return toEntity(returnValue);
 	}
 
+	private Entity getObject(ArgumentList args) {
+		Entity object = args.nextCast(method.getDeclaringClass());
+		return object;
+	}
+
 	private Entity toEntity(Object returnValue) {
-		Entity entityValue;
-	    entityValue = (Entity) returnValue;
-		return entityValue;
+		return (Entity) returnValue;
 	}
 
 	private Object[] createParameters(ArgumentList args) {
-		Object[] objects = new Object [getNumberOfParameters()];
+		Class<?>[] parameterTypes = method.getParameterTypes();
+		Object[] objects = new Object [parameterTypes.length];
 		for (int i = 0; i < objects.length; i++) {
-			Entity nextArg = args.next();
-		    objects[i] = nextArg;
+			objects[i] = args.nextCast(parameterTypes[i]);
 		}
 		return objects;
 	}
 
-	private int getNumberOfParameters() {
-		return method.getParameterTypes().length;
-	}
-	
 	private Object callMethodOnObject(Entity object, Object[] parameters) {
 		try {
 			return method.invoke(object, parameters);
 		} catch (IllegalAccessException e) {
 			e.printStackTrace();
 		} catch (IllegalArgumentException e) {
-			System.out.println("Exposed Function " + getName());
-			for(Object o : parameters) {
-				System.out.print(o.toString() + " " + o.getClass().toString());
-			}
+			e.getMessage();
 			e.printStackTrace();
 		} catch (InvocationTargetException e) {
 			e.printStackTrace();

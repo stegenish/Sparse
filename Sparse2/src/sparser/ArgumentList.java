@@ -47,13 +47,14 @@ public class ArgumentList
         return next < args.size();
     }
 
-	public Entity next()
+	@SuppressWarnings("unchecked")
+	public <T extends Entity> T next()
     {
         if(!hasNext())
         {
             throw new NoSuchElementException();
         }
-        return args.get(next++);
+        return (T) args.get(next++);
     }
 
 	public void dump() {
@@ -64,10 +65,20 @@ public class ArgumentList
 	}
 
 	public SparseInt getIntArgument() {
+		return nextCast(SparseInt.class);
+	}
+
+	public <T extends Entity> T nextCast(Class<?> clazz) {
+		T arg = next();
 		try {
-			return (SparseInt) next();
+			clazz.cast(arg);
 		} catch (ClassCastException e) {
 			throw new SparseException("argument " + next, e);
 		}
+		return arg;
+	}
+
+	public Symbol nextSymbol() {
+		return nextCast(Symbol.class);
 	}
 }

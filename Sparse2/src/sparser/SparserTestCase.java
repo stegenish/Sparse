@@ -55,4 +55,21 @@ public abstract class SparserTestCase extends TestCase {
 	protected Code parseString(String code2) {
 		return parser.parseString(code2);
 	}
+
+	public Entity executeString(String str) {
+		Code code = parseString(str);
+		Entity firstElement = code.execute(globalScope);
+		return firstElement;
+	}
+
+	public void checkIncorrectArgument(String code, String expected) {
+		Exception caught = null;
+		try {
+			executeString(code);
+		} catch (SparseException e) {
+			assertTrue(e.getMessage(), e.getInfo().contains(expected));
+			caught = e;
+		}
+		assertNotNull(caught);
+	}
 }
