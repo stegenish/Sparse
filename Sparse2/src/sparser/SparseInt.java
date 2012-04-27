@@ -14,19 +14,17 @@ import static sparser.SparseBoolean.toSparseBoolean;
  *
  * @author  Administrator
  */
-public class SparseInt extends Symbol
+public class SparseInt implements Entity
 {
     private BigInteger num;
 
     public SparseInt(String s)
     {
-        super(s);
         num = new BigInteger(s);
     }
 
     public SparseInt(BigInteger i)
     {
-        super(i.toString());
         num = i;
     }
 

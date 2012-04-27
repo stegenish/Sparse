@@ -30,6 +30,11 @@ public class SparseToken extends Token {
 	 * The token is a reader macro.
 	 */
 	public final static int READER_MACRO = 4;
+	
+	/**
+	 * The token is a number
+	 */
+	public final static int INTEGER = 5;
 
 	/**
 	 * The token is anything not mentioned above
@@ -97,7 +102,11 @@ public class SparseToken extends Token {
             type = STRING;
         }
         else {
-            type = SYMBOL;
+        	if(s.matches("^-?\\d+$")) {
+        		type = INTEGER;
+        	} else {
+        		type = SYMBOL;
+        	}
         }
     }
 }

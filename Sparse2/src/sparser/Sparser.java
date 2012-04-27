@@ -95,6 +95,9 @@ public class Sparser
 		    case SparseToken.SYMBOL:
 		    	entity = parseSymbol(token);
 		        break;
+		    case SparseToken.INTEGER:
+		    	entity = parseInteger(token);
+		        break;
 		    case SparseToken.RBRACKET:
 		    	entity = null;
 		    	break;
@@ -109,6 +112,10 @@ public class Sparser
 		                            "Expected a list, symbol or string");
 		}
 		return entity;
+	}
+
+	private Entity parseInteger(SparseToken token) {
+		return new SparseInt(token.getToken());
 	}
 
 	private Entity readerMacro() {
@@ -140,13 +147,7 @@ public class Sparser
     private Symbol parseSymbol(SparseToken token)
     {
         String str = token.getToken();
-        Symbol s;
-        try {
-            s = SparseInt.valueOf(str);
-        } catch(NumberFormatException e) {
-        	s = symbols.getSymbol(str);
-        }
-        return s;
+        return symbols.getSymbol(str);
     }
 
     private Entity parseString(SparseToken token)
