@@ -18,20 +18,20 @@ import sparser.SparseInt;
  *
  * @author  Administrator
  */
-public class Add extends Function
+public class Subtract extends Function
 {
-	public Add() {
+	public Subtract() {
     	super("add");
     }
 
     public Entity callImplementation(ArgumentList args, Scope scope)
     {
-        BigInteger result = new BigInteger("0");
+        BigInteger result = args.nextInt().getValue();
         while(args.hasNext())
         {
             SparseInt sparseValue = args.nextInt();
 			BigInteger intValue = sparseValue.getValue();
-			result = result.add(intValue);
+			result = result.subtract(intValue);
         }
         return SparseInt.valueOf(result);
     }

@@ -15,6 +15,7 @@ import sparser.builtins.Import;
 import sparser.builtins.List;
 import sparser.builtins.Multiply;
 import sparser.builtins.Print;
+import sparser.builtins.Subtract;
 import specialForms.Bind;
 import specialForms.DefSpecial;
 import specialForms.Defun;
@@ -41,10 +42,13 @@ public class Sparser
 	private void initialBindings(Scope scope) {
 		bindSymbol("assert", new AssertEquals(), scope);
 		bindSymbol("add", new Add(), scope);
+		bindSymbol("+", new Add(), scope);
+		bindSymbol("-", new Subtract(), scope);
 		bindSymbol("bind", new Bind(scope), scope);
 		bindSymbol("defun", new Defun(), scope);
 		bindSymbol("defspecial", new DefSpecial(), scope);
 		bindSymbol("multiply", new Multiply(), scope);
+		bindSymbol("*", new Multiply(), scope);
 		bindSymbol("print", new Print(), scope);
 		bindSymbol("quote", new Quote(), scope);
 		bindSymbol("if", new If(), scope);

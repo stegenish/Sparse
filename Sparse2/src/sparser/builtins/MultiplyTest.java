@@ -39,4 +39,9 @@ public class MultiplyTest extends SparserTestCase {
 		Entity call = fun.callWithScope(args, scope);
 		assertEquals(new BigInteger("24"), ((SparseInt)call).getValue());
 	}
+	
+	public void testArgumentsMustBeNumbers() throws Exception {
+		checkIncorrectArgument("(* \"asd\" 2)", "argument 1");
+		
+	}
 }

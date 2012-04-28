@@ -63,11 +63,7 @@ public class ArgumentList
 		}
 		System.out.println();
 	}
-
-	public SparseInt getIntArgument() {
-		return nextCast(SparseInt.class);
-	}
-
+	
 	public <T extends Entity> T nextCast(Class<?> clazz) {
 		T arg = next();
 		try {
@@ -76,6 +72,10 @@ public class ArgumentList
 			throw new SparseException("argument " + next, e);
 		}
 		return arg;
+	}
+	
+	public SparseInt nextInt() {
+		return nextCast(SparseInt.class);
 	}
 
 	public Symbol nextSymbol() {

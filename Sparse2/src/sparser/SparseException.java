@@ -35,7 +35,10 @@ public class SparseException extends RuntimeException {
 	}
 
 	public String getInfo() {
-		return stackTrace.get(0) + ": " + getMessage() + "\n" +
-			   "source: " + getCause().getMessage();
+		String string = stackTrace.get(0) + ": " + getMessage();
+		if(getCause() != null) {
+			string += "\n" + "source: " + getCause().getMessage();
+		}
+		return string;
 	}
 }

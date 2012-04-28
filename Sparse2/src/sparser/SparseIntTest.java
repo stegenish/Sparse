@@ -20,4 +20,8 @@ public class SparseIntTest extends TestCase {
 		SparseInt sint = SparseInt.valueOf(new BigInteger("321"));
 		assertEquals(new SparseInt("321"), sint);
 	}
+	
+	public void testToStringReturnsNumberAsString() throws Exception {
+		assertEquals("123", SparseInt.valueOf(123).toString());
+	}
 }

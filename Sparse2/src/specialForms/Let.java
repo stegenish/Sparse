@@ -6,6 +6,7 @@ import sparser.ArgumentList;
 import sparser.Code;
 import sparser.Entity;
 import sparser.Scope;
+import sparser.SparseException;
 import sparser.SparseList;
 import sparser.SpecialForm;
 import sparser.Symbol;
@@ -18,7 +19,7 @@ public class Let extends SpecialForm {
 
 	@Override
 	protected Entity callImplementation(ArgumentList args, Scope scope) {
-		SparseList bindingList = (SparseList) args.next();
+		SparseList bindingList = args.nextList();
 		Scope letScope = createLetScope(scope, bindingList);
 		Code body = createLetBody(args);
 		return body.execute(letScope);
@@ -26,10 +27,15 @@ public class Let extends SpecialForm {
 
 	private Scope createLetScope(Scope scope, SparseList bindingList) {
 		Scope letScope = scope.createShadowScope();
-		for(Entity binding : bindingList) {
-			bindToScope(scope, letScope, (SparseList) binding);
+		for(Entity entity : bindingList) {
+			if(entity instanceof SparseList) {
+				SparseList binding = (SparseList) entity;
+				bindToScope(scope, letScope, binding);
+			} else {
+				throw new SparseException(entity.createString() + " not valid binding in let");
+			}
 		}
-		
+
 		return letScope;
 	}
 

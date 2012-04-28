@@ -17,7 +17,7 @@ public class Multiply extends Function {
 	public Entity callImplementation(ArgumentList args, Scope scope) {
 		BigInteger result = new BigInteger("1");
 		while(args.hasNext()) {
-			Entity next = args.next();
+			Entity next = args.nextInt();
 			result = result.multiply(((SparseInt)next).getValue());
 		}
 		return SparseInt.valueOf(result);

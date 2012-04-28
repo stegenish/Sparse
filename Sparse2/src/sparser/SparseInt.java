@@ -16,21 +16,21 @@ import static sparser.SparseBoolean.toSparseBoolean;
  */
 public class SparseInt implements Entity
 {
-    private BigInteger num;
+    private BigInteger intValue;
 
     public SparseInt(String s)
     {
-        num = new BigInteger(s);
+        intValue = new BigInteger(s);
     }
 
     public SparseInt(BigInteger i)
     {
-        num = i;
+        intValue = i;
     }
 
 	public BigInteger getValue()
     {
-        return num;
+        return intValue;
     }
 
     public Entity execute(Scope scope)
@@ -54,13 +54,13 @@ public class SparseInt implements Entity
 	}
     
 	private int compareTo(SparseInt other) {
-		return this.num.compareTo(other.num);
+		return this.intValue.compareTo(other.intValue);
 	}
     
     public boolean equals(Object obj) {
     	if(obj instanceof SparseInt) {
     		SparseInt i = (SparseInt) obj;
-    		return num.equals(i.getValue());
+    		return intValue.equals(i.getValue());
     	}
     	return false;
     }
@@ -71,7 +71,7 @@ public class SparseInt implements Entity
     }
 
     public int hashCode() {
-    	return num.hashCode();
+    	return intValue.hashCode();
     }
 
 	public static SparseInt valueOf(int i) {
@@ -88,7 +88,7 @@ public class SparseInt implements Entity
 
 	@Override
 	public String toString() {
-		return super.toString();
+		return intValue.toString();
 	}
 	
 	@Override
