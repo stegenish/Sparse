@@ -54,6 +54,10 @@ public class DefunTest extends SparserTestCase {
 	public void testSecondArgumentCannotBeNumber() throws Exception {
 		checkIncorrectArgument("(defun 1 () null)", "argument 1");
 	}
+	
+	public void testThirdArgumentMustBeList() throws Exception {
+		checkIncorrectArgument("(defun name asd null)", "argument 2");
+	}
 
 	private Callable parseFunction(String program) {
 		return (Callable) executeString(program);

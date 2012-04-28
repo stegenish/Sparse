@@ -81,4 +81,8 @@ public class ArgumentList
 	public Symbol nextSymbol() {
 		return nextCast(Symbol.class);
 	}
+
+	public SparseList nextList() {
+		return nextCast(SparseList.class);
+	}
 }
