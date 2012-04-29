@@ -35,4 +35,9 @@ public class SparseListTest extends TestCase {
 		Entity firstElement = list.getFirstElement();
 		assertEquals(SparseInt.valueOf(2), firstElement);
 	}
+	
+	public void testEmptyListPrintsProperly() throws Exception {
+		assertEquals("()", new SparseList().createString());
+		
+	}
 }

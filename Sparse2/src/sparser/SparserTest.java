@@ -82,8 +82,4 @@ public class SparserTest extends SparserTestCase {
 	public void testStackTraceContainsSourceOfErrorAdditionalInformation() throws Exception {
 		checkIncorrectArgument("(add 1 (list 1))", "Cannot cast");
 	}
-	
-	public void testExposedFunctionChecksArgument() throws Exception {
-		checkIncorrectArgument("(concat (list 1) 1)", "argument 2");
-	}
 }

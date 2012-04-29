@@ -6,7 +6,7 @@ import java.util.Iterator;
 
 public class SparseList implements Entity, Iterable<Entity> {
 	
-	private Entity element;
+	private Entity element = SparseNull.theNull;
     private SparseList next;
 	
 	private SparseList next() {
@@ -29,6 +29,13 @@ public class SparseList implements Entity, Iterable<Entity> {
 	}
 
 	@ExposedSparseFunction(name = "concat")
+	public SparseList concat(Entity list) {
+		if (list != SparseNull.theNull) {
+			return insertEnd((SparseList) list);
+		}
+		return this;
+	}
+	
 	public SparseList insertEnd(SparseList list) {
 		if(next() == null) {
 			next(list);
@@ -40,7 +47,7 @@ public class SparseList implements Entity, Iterable<Entity> {
 
 	@ExposedSparseFunction(name = "append")
 	public void append(Entity elem) {
-		if(element() == null) {
+		if(element() == SparseNull.theNull) {
     		element(elem);
     	} else if(next() == null) {
     		next(new SparseList());
@@ -57,7 +64,7 @@ public class SparseList implements Entity, Iterable<Entity> {
 	
 	@ExposedSparseFunction(name = "rest")
 	public Entity rest() {
-		SparseList sparseList;
+		Entity sparseList;
 		SparseList restNodes = next();
 		if(restNodes != null) {
 			sparseList = restNodes;
@@ -75,8 +82,13 @@ public class SparseList implements Entity, Iterable<Entity> {
 		return createString();
 	}
 
+	@ExposedSparseFunction(name = "empty")
+	public SparseBoolean isEmpty() {
+		return toSparseBoolean(isNil());
+	}
+	
 	public boolean isNil() {
-		return element() == null && next() == null;
+		return element() == SparseNull.theNull && next() == null;
 	}
 
 	@Override
@@ -102,7 +114,9 @@ public class SparseList implements Entity, Iterable<Entity> {
 		for(Entity node : this) {
 			str.append(node.createString()).append(" ");
 		}
-		str.setLength(str.length() - 1);
+		if(str.length() > 1) {
+			str.setLength(str.length() - 1);
+		}
 		str.append(")");
 		return str.toString();
 	}
