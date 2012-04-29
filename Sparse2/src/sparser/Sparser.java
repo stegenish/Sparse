@@ -17,6 +17,7 @@ import sparser.builtins.Multiply;
 import sparser.builtins.Print;
 import sparser.builtins.Subtract;
 import specialForms.Bind;
+import specialForms.Boundp;
 import specialForms.DefSpecial;
 import specialForms.Defun;
 import specialForms.Eval;
@@ -61,6 +62,7 @@ public class Sparser
 		bindSymbol("while", new While(), scope);
 		bindSymbol("null", SparseNull.theNull, scope);
 		bindSymbol("import", new Import(this), scope);
+		bindSymbol("isbound", new Boundp(), scope);
 		
 		exposeType(SparseList.class);
 		exposeType(SparseInt.class);

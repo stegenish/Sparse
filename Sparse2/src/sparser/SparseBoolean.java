@@ -2,19 +2,26 @@ package sparser;
 
 public class SparseBoolean implements Entity {
 
-	public static final SparseBoolean False = new SparseBoolean();
-	public static final SparseBoolean True = new SparseBoolean();
+	public static final SparseBoolean False = new SparseBoolean("false");
+	public static final SparseBoolean True = new SparseBoolean("true");
 	
-	private SparseBoolean() {
-		
+	private String description;
+	
+	private SparseBoolean(String description) {
+		this.description = description;
 	}
 	
 	public Entity execute(Scope scope) {
 		return this;
 	}
 
+	@Override
+	public String toString() {
+		return description;
+	}
+	
 	public String createString() {
-		return null;
+		return toString();
 	}
 	
 	public static SparseBoolean toSparseBoolean(boolean b) {

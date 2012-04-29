@@ -2,6 +2,7 @@ package sparser;
 
 import java.util.HashMap;
 import java.util.Map;
+import static sparser.SparseBoolean.toSparseBoolean;
 
 public class Scope {
 
@@ -54,5 +55,9 @@ public class Scope {
 	
 	private boolean isShadowingScope() {
 		return shadowedScope != null;
+	}
+
+	public Entity isBound(Symbol symbol) {
+		return toSparseBoolean(bindings.containsKey(symbol));
 	}
 }
