@@ -58,6 +58,6 @@ public class Scope {
 	}
 
 	public Entity isBound(Symbol symbol) {
-		return toSparseBoolean(bindings.containsKey(symbol));
+		return toSparseBoolean(getBinding(symbol) != null);
 	}
 }
