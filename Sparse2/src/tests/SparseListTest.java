@@ -62,37 +62,31 @@ public class SparseListTest extends SparserTestCase
     public void testCreateString() throws Exception
     {
         String str = "(hello)";
-        parser = new Sparser(globalScope);
-        SparseList sl = parse(parser, str);
+        SparseList sl = parse(str);
         assertEquals(str, sl.toString());
 
         str = "(hello)";
-        parser = new Sparser(globalScope);
-        sl = parse(parser, str);
+        sl = parse(str);
         assertEquals(str, sl.toString());
 
         str = "(hello there)";
-        parser = new Sparser(globalScope);
-        sl = parse(parser, str);
+        sl = parse(str);
         assertEquals(str, sl.toString());
 
         str = "(hello there (footnote) everyone)";
-        parser = new Sparser(globalScope);
-        sl = parse(parser, str);
+        sl = parse(str);
         assertEquals(str, sl.toString());
 
         str = "(hello there (deep (footnote)) everyone)";
-        parser = new Sparser(globalScope);
-        sl = parse(parser, str);
+        sl = parse(str);
         assertEquals(str, sl.toString());
 
         str = "(hello there \"a string\" (deep \"(footnote)\") everyone)";
-        parser = new Sparser(globalScope);
-        sl = parse(parser, str);
+        sl = parse(str);
         assertEquals(str, sl.toString());
     }
 
-	private SparseList parse(Sparser parser, String str) {
+	private SparseList parse(String str) {
 		return (SparseList)(parser.parseString(str).getEntities().get(0));
 	}
 }

@@ -13,7 +13,6 @@ import sparser.Entity;
 import sparser.SparseInt;
 import sparser.SparseList;
 import sparser.SparseString;
-import sparser.Sparser;
 import sparser.SparserTestCase;
 import sparser.Symbol;
 import sparser.SyntaxErrorException;
@@ -137,7 +136,6 @@ public class SparserTest extends SparserTestCase
     }
 
 	private List<Entity> parseStr(String str) {
-		parser = new Sparser(globalScope);
         List<Entity> lists = null;
         try
         {

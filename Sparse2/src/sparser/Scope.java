@@ -1,5 +1,7 @@
 package sparser;
 
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
 import static sparser.SparseBoolean.toSparseBoolean;
@@ -59,5 +61,19 @@ public class Scope {
 
 	public Entity isBound(Symbol symbol) {
 		return toSparseBoolean(getBinding(symbol) != null);
+	}
+
+	public void exposeType(Class<? extends Entity> type, Symbols symbols) {
+		Method[] methods = type.getMethods();
+		for (Method method : methods) {
+			Annotation[] declaredAnnotations = method.getDeclaredAnnotations();
+			for (int i = 0; i < declaredAnnotations.length; i++) {
+				Annotation annotation = declaredAnnotations[i];
+				if(annotation instanceof ExposedSparseFunction) {
+					ExposedSparseFunction exposedFunction = (ExposedSparseFunction) annotation;
+					bind(symbols.getSymbol(exposedFunction.name()), new ExposedFunction(exposedFunction, method));
+				}
+			}
+		}
 	}
 }

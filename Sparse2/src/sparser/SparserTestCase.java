@@ -20,11 +20,14 @@ public abstract class SparserTestCase extends TestCase {
 		super.setUp();
 		globalScope = new Scope();
 		testSpecialForm = new TestSpecialForm();
-		parser = new Sparser(globalScope);
-		parser.bindSymbol("test", testSpecialForm, globalScope);
-
+		Symbols symbols = new Symbols();
+		parser = new Sparser(symbols);
+		
+		SparseSourceRunner.initialBindings(globalScope, symbols);
+		
+		globalScope.bind(symbols.getSymbol("test"), testSpecialForm);
 		testFunction = new TestBuiltin();
-		parser.bindSymbol("testFun", testFunction, globalScope);
+		globalScope.bind(symbols.getSymbol("testFun"), testFunction);
 		scope = globalScope.createFunctionScope();
 	}
 

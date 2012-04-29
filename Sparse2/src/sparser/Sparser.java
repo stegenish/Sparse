@@ -6,72 +6,17 @@
 
 package sparser;
 
-import java.lang.annotation.Annotation;
-import java.lang.reflect.Method;
-
-import sparser.builtins.Add;
-import sparser.builtins.AssertEquals;
-import sparser.builtins.Import;
-import sparser.builtins.List;
-import sparser.builtins.Multiply;
-import sparser.builtins.Print;
-import sparser.builtins.Subtract;
-import specialForms.Bind;
-import specialForms.Boundp;
-import specialForms.DefSpecial;
-import specialForms.Defun;
-import specialForms.Eval;
-import specialForms.If;
-import specialForms.Let;
-import specialForms.Quote;
-
 /**
   * @author  Administrator
   *
   */
 public class Sparser
 {
-    private Symbols symbols = new Symbols();
-	private Scope globalScope;
+    private Symbols symbols;
 	private SparseTokeniser tokens;
 
-	public Sparser(Scope scope) {
-		this.globalScope = scope;
-		initialBindings(globalScope);
-	}
-
-	private void initialBindings(Scope scope) {
-		bindSymbol("assert", new AssertEquals(), scope);
-		bindSymbol("add", new Add(), scope);
-		bindSymbol("+", new Add(), scope);
-		bindSymbol("-", new Subtract(), scope);
-		bindSymbol("bind", new Bind(scope), scope);
-		bindSymbol("defun", new Defun(), scope);
-		bindSymbol("defspecial", new DefSpecial(), scope);
-		bindSymbol("multiply", new Multiply(), scope);
-		bindSymbol("*", new Multiply(), scope);
-		bindSymbol("print", new Print(), scope);
-		bindSymbol("quote", new Quote(), scope);
-		bindSymbol("if", new If(), scope);
-		bindSymbol("true", SparseBoolean.True, scope);
-		bindSymbol("false", SparseBoolean.False, scope);
-		bindSymbol("if", new If(), scope);
-		bindSymbol("let", new Let(), scope);
-		bindSymbol("list", new List(), scope);
-		bindSymbol("eval", new Eval(), scope);
-		bindSymbol("while", new While(), scope);
-		bindSymbol("null", SparseNull.theNull, scope);
-		bindSymbol("import", new Import(this), scope);
-		bindSymbol("isbound", new Boundp(), scope);
-		
-		exposeType(SparseList.class);
-		exposeType(SparseInt.class);
-		exposeType(Entity.class);
-	}
-	
-	public void bindSymbol(String string, Entity entity, Scope scope) {
-		String str = new SparseToken(string, false).getToken();
-		scope.bind(symbols.getSymbol(str), entity);
+	public Sparser(Symbols symbols) {
+		this.symbols = symbols;
 	}
 
 	public Code parseString(String code) {
@@ -161,12 +106,6 @@ public class Sparser
         return new SparseString(token.getToken().substring(1, token.getToken().length() - 1));
     }
 
-    /**
-     * Returns the next token from the tokeniser.
-     * @param canEnd If true it is not a syntax error if there are no
-     * more tokens. If false and there are no more tokens a SyntaxErrorException
-     * will be thrown.
-     */
     private SparseToken nextToken(boolean canEnd)
     {
         SparseToken tok = (SparseToken)tokens.next();
@@ -179,20 +118,6 @@ public class Sparser
 
 	public Symbol getSymbol(String symName) {
 		return symbols.getSymbol(symName);
-	}
-
-	public void exposeType(Class<? extends Entity> type) {
-		Method[] methods = type.getMethods();
-		for (Method method : methods) {
-			Annotation[] declaredAnnotations = method.getDeclaredAnnotations();
-			for (int i = 0; i < declaredAnnotations.length; i++) {
-				Annotation annotation = declaredAnnotations[i];
-				if(annotation instanceof ExposedSparseFunction) {
-					ExposedSparseFunction exposedFunction = (ExposedSparseFunction) annotation;
-					bindSymbol(exposedFunction.name(), new ExposedFunction(exposedFunction, method), globalScope);
-				}
-			}
-		}
 	}
 }
 
