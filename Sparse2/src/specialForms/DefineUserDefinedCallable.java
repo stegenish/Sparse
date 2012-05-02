@@ -16,13 +16,13 @@ public abstract class DefineUserDefinedCallable extends Callable {
 		super(name, argumentProcessor, scopeSemantics);
 	}
 	
-	protected abstract Callable createUserDefinedCallable(Symbol name, SparseList params, Code code);
+	protected abstract Callable createUserDefinedCallable(Symbol name, SparseList params, Code code, Scope scope);
 	
 	public Entity callImplementation(ArgumentList args, Scope scope) {
 		Symbol name = args.nextSymbol();
 		SparseList params = args.nextList();
 		Code code = createCode(args);
-		Callable userDefinedCallable = createUserDefinedCallable(name, params, code);
+		Callable userDefinedCallable = createUserDefinedCallable(name, params, code, scope);
 		scope.bind(name, userDefinedCallable);
 		return userDefinedCallable;
 	}

@@ -4,6 +4,8 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
+
+import sparser.builtins.ExportedBindings;
 import static sparser.SparseBoolean.toSparseBoolean;
 
 public class Scope {

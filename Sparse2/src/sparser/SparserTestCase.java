@@ -1,6 +1,7 @@
 package sparser;
 
 import junit.framework.TestCase;
+import sparser.builtins.ExportedBindings;
 import sparser.builtins.TestBuiltin;
 import specialForms.TestSpecialForm;
 
@@ -10,6 +11,8 @@ public abstract class SparserTestCase extends TestCase {
 	protected TestSpecialForm testSpecialForm;
 	protected Scope scope;
 	protected Scope globalScope;
+	protected ExportedBindings exportedBindings = null;
+	protected Symbols symbols;
 
 	public SparserTestCase(String testName) {
 		super(testName);
@@ -20,10 +23,10 @@ public abstract class SparserTestCase extends TestCase {
 		super.setUp();
 		globalScope = new Scope();
 		testSpecialForm = new TestSpecialForm();
-		Symbols symbols = new Symbols();
+		symbols = new Symbols();
 		parser = new Sparser(symbols);
 		
-		SparseSourceRunner.initialBindings(globalScope, symbols);
+		SparseSourceRunner.initialBindings(globalScope, symbols, exportedBindings);
 		
 		globalScope.bind(symbols.getSymbol("test"), testSpecialForm);
 		testFunction = new TestBuiltin();

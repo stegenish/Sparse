@@ -2,3 +2,5 @@
   (assert true (isbound a))
   (assert true (isbound b))
   (assert false (isbound c)))
+
+(export test1)

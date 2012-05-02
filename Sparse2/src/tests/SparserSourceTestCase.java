@@ -14,7 +14,7 @@ public abstract class SparserSourceTestCase extends TestCase {
 		
 		BufferedReader reader = new BufferedReader(new FileReader(filePath));
 		SparseSourceRunner runner = new SparseSourceRunner(reader);
-		runner.run();
+		runner.run(null);
 	}
 
 }

@@ -7,6 +7,7 @@ import java.io.IOException;
 
 import sparser.builtins.Add;
 import sparser.builtins.AssertEquals;
+import sparser.builtins.ExportedBindings;
 import sparser.builtins.Import;
 import sparser.builtins.List;
 import sparser.builtins.Multiply;
@@ -17,6 +18,7 @@ import specialForms.Boundp;
 import specialForms.DefSpecial;
 import specialForms.Defun;
 import specialForms.Eval;
+import specialForms.Export;
 import specialForms.If;
 import specialForms.Let;
 import specialForms.Quote;
@@ -24,7 +26,12 @@ import specialForms.Quote;
 public class SparseSourceRunner {
 
 	private String source;
+	static Symbols symbols = new Symbols();
 
+	public SparseSourceRunner(String fileName) {
+		this.source = loadFile(fileName);
+	}
+	
 	public SparseSourceRunner(BufferedReader reader) {
 		String fileBuffer = loadFile(reader);
 		this.source = fileBuffer;
@@ -53,14 +60,14 @@ public class SparseSourceRunner {
 		return fileBuffer;
 	}
 
-	public void run() {
-		Scope scope = new Scope();
-		Symbols symbols = new Symbols();
+	public Entity run(ExportedBindings exports) {
+		Scope fileLexicalScope = new Scope();
+		
 		Sparser parser = new Sparser(symbols);
-		SparseSourceRunner.initialBindings(scope, symbols);
+		SparseSourceRunner.initialBindings(fileLexicalScope, symbols, exports);
 		Code code = parser.parseString(source);
 		try {
-			code.execute(scope);
+			return code.execute(fileLexicalScope);
 		} catch (SparseException e) {
 			System.err.println("Exception thrown and not caught:");
 			System.err.println(e.getMessage());
@@ -70,7 +77,7 @@ public class SparseSourceRunner {
 		}
 	}
 
-	static void initialBindings(Scope scope, Symbols symbols) {
+	public static void initialBindings(Scope scope, Symbols symbols, ExportedBindings exports) {
 		bindSymbol("assert", new AssertEquals(), scope, symbols);
 		bindSymbol("add", new Add(), scope, symbols);
 		bindSymbol("+", new Add(), scope, symbols);
@@ -92,7 +99,8 @@ public class SparseSourceRunner {
 		bindSymbol("while", new While(), scope, symbols);
 		bindSymbol("null", SparseNull.theNull, scope, symbols);
 		bindSymbol("isbound", new Boundp(), scope, symbols);
-		SparseSourceRunner.bindSymbol("import", new Import(new Sparser(symbols)), scope, symbols);
+		bindSymbol("import", new Import(), scope, symbols);
+		bindSymbol("export", new Export(exports), scope, symbols);
 		scope.exposeType(SparseList.class, symbols);
 		scope.exposeType(SparseInt.class, symbols);
 		scope.exposeType(Entity.class, symbols);

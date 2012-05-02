@@ -15,7 +15,7 @@ public class SparseSourceExecutorTest extends SparserTestCase {
 		Reader source = new StringReader("(bind 3 a)(bind 4 b)(bind 6 c)");
 		BufferedReader reader = new BufferedReader(source);
 		SparseSourceRunner executor = new SparseSourceRunner(reader);
-		executor.run();
+		executor.run(null);
 	}
 
 }
