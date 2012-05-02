@@ -7,7 +7,7 @@ import sparser.SparseSourceRunner;
 import sparser.SparseString;
 import sparser.SpecialForm;
 
-public class Import extends SpecialForm implements Entity {
+public class Import extends SpecialForm {
 
 	public Import() {
 		super("import");
