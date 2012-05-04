@@ -1,12 +1,8 @@
 package specialForms;
 
-import sparser.Code;
 import sparser.Scope;
 import sparser.SparseInt;
-import sparser.SparseSourceRunner;
-import sparser.Sparser;
 import sparser.SparserTestCase;
-import sparser.Symbols;
 import sparser.builtins.ExportedBindings;
 
 public class ExportTest extends SparserTestCase {
