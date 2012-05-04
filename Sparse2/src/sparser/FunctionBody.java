@@ -16,22 +16,30 @@ public class FunctionBody {
 				if (parameter instanceof Symbol) {
 					bindSymbolParameter(args, localScope, parameter);
 				} else {
-					SparseList param = (SparseList) parameter;
-					param.getFirstElement();
-					Symbol symbol = (Symbol) ((SparseList)param.rest()).getFirstElement();
-					SparseList restList = new SparseList();
-					while(args.hasNext()) {
-						restList.append(args.next());
-					}
-					localScope.bind(symbol, restList);
+					bindRestListParameter(args, localScope, parameter);
 				}
 			}
 		}
 		return code.execute(localScope);
 	}
 
-	private void bindSymbolParameter(ArgumentList args, Scope localScope,
-			Entity parameter) {
+	private void bindRestListParameter(ArgumentList args, Scope localScope, Entity parameter) {
+		SparseList param = (SparseList) parameter;
+		param.getFirstElement();
+		Symbol symbol = (Symbol) ((SparseList)param.rest()).getFirstElement();
+		SparseList restList = getRestList(args);
+		localScope.bind(symbol, restList);
+	}
+
+	private SparseList getRestList(ArgumentList args) {
+		SparseList restList = new SparseList();
+		while(args.hasNext()) {
+			restList.append(args.next());
+		}
+		return restList;
+	}
+
+	private void bindSymbolParameter(ArgumentList args, Scope localScope, Entity parameter) {
 		Symbol sym = (Symbol) parameter;
 		localScope.bind(sym, args.next());
 	}
