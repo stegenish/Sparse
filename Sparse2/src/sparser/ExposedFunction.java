@@ -50,6 +50,4 @@ public class ExposedFunction extends Function {
 		}
 		return SparseNull.theNull;
 	}
-
-	
 }

@@ -17,7 +17,6 @@ public class FunctionBody {
 					bindSymbolParameter(args, localScope, parameter);
 				} else {
 					SparseList param = (SparseList) parameter;
-					param.getFirstElement();
 					Symbol symbol = (Symbol) ((SparseList)param.rest()).getFirstElement();
 					SparseList restList = new SparseList();
 					while(args.hasNext()) {
@@ -30,8 +29,7 @@ public class FunctionBody {
 		return code.execute(localScope);
 	}
 
-	private void bindSymbolParameter(ArgumentList args, Scope localScope,
-			Entity parameter) {
+	private void bindSymbolParameter(ArgumentList args, Scope localScope, Entity parameter) {
 		Symbol sym = (Symbol) parameter;
 		localScope.bind(sym, args.next());
 	}

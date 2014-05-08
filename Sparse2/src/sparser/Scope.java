@@ -9,14 +9,20 @@ public class Scope {
 	private Map<Symbol, Entity> bindings = new HashMap<Symbol, Entity>();
 	private Scope shadowedScope;
 	private Scope globalScope;
+	private Scope importingScope;
 
 	public Scope() {
 		globalScope = this;
 	}
 
-	private Scope(Scope containingScope, Scope globalScope) {
+	public Scope(Scope containingScope, Scope globalScope) {
 		this.shadowedScope = containingScope;
 		this.globalScope = globalScope;
+	}
+
+	public Scope(Scope containingScope, Scope globalScope, Scope importingScope) {
+		this(containingScope, globalScope);
+		this.importingScope = importingScope;
 	}
 
 	public Entity getBinding(Symbol symbol) {
@@ -59,5 +65,15 @@ public class Scope {
 
 	public Entity isBound(Symbol symbol) {
 		return toSparseBoolean(getBinding(symbol) != null);
+	}
+
+	public Scope GetGlobalScope() {
+		return globalScope;
+	}
+	
+	public Entity export(Symbol symbol) {
+		Entity exportedValue = getBinding(symbol);
+		importingScope.bind(symbol, exportedValue);
+		return exportedValue;
 	}
 }

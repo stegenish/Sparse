@@ -31,6 +31,7 @@ public class SparseTokeniser extends StrategyTokeniser
             c = file.read();
         }
         setString(str.toString());
+        file.close();
     }
     
     public SparseTokeniser(String str)

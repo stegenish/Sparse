@@ -27,7 +27,7 @@ public class Import extends SpecialForm implements Entity {
 		SparseString fileName = (SparseString) args.next();
 		String source = SparseSourceRunner.loadFile(fileName.toString());
 		Code code = sparser.parseString(source);
-		return code.execute(scope);
+		return code.execute(new Scope(null, scope.GetGlobalScope(), scope));
 	}
 
 }

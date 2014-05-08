@@ -11,6 +11,7 @@ import java.lang.reflect.Method;
 
 import sparser.builtins.Add;
 import sparser.builtins.AssertEquals;
+import sparser.builtins.Export;
 import sparser.builtins.Import;
 import sparser.builtins.List;
 import sparser.builtins.Multiply;
@@ -18,7 +19,6 @@ import sparser.builtins.Print;
 import sparser.builtins.Subtract;
 import specialForms.Bind;
 import specialForms.Boundp;
-import specialForms.DefSpecial;
 import specialForms.Defun;
 import specialForms.Eval;
 import specialForms.If;
@@ -47,7 +47,6 @@ public class Sparser
 		bindSymbol("-", new Subtract(), scope);
 		bindSymbol("bind", new Bind(scope), scope);
 		bindSymbol("defun", new Defun(), scope);
-		bindSymbol("defspecial", new DefSpecial(), scope);
 		bindSymbol("multiply", new Multiply(), scope);
 		bindSymbol("*", new Multiply(), scope);
 		bindSymbol("print", new Print(), scope);
@@ -63,6 +62,7 @@ public class Sparser
 		bindSymbol("null", SparseNull.theNull, scope);
 		bindSymbol("import", new Import(this), scope);
 		bindSymbol("isbound", new Boundp(), scope);
+		bindSymbol("export", new Export(), scope);
 		
 		exposeType(SparseList.class);
 		exposeType(SparseInt.class);

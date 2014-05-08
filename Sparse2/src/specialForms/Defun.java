@@ -1,17 +1,36 @@
 package specialForms;
 
+import sparser.ArgumentList;
 import sparser.Callable;
 import sparser.Code;
-import sparser.NonArgumentEvaluatingSemantics;
-import sparser.SameScopeSemantics;
+import sparser.Entity;
+import sparser.Scope;
 import sparser.SparseList;
+import sparser.SpecialForm;
 import sparser.Symbol;
 import sparser.UserDefinedFunction;
 
-public class Defun extends DefineUserDefinedCallable {
+public class Defun extends SpecialForm {
 
 	public Defun() {
-		super("defun", new NonArgumentEvaluatingSemantics(), new SameScopeSemantics());
+		super("defun");
+	}
+	
+	public Entity callImplementation(ArgumentList args, Scope scope) {
+		Symbol name = args.nextSymbol();
+		SparseList params = args.nextList();
+		Code code = createCode(args);
+		Callable userDefinedCallable = createUserDefinedCallable(name, params, code);
+		scope.bind(name, userDefinedCallable);
+		return userDefinedCallable;
+	}
+	
+	private Code createCode(ArgumentList args) {
+		Code code = new Code();
+		while(args.hasNext()) {
+			code.appendEntity(args.next());
+		}
+		return code;
 	}
 
 	protected Callable createUserDefinedCallable(Symbol name, SparseList params, Code code) {

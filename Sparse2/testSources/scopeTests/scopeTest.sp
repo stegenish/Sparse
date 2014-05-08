@@ -1,4 +1,4 @@
 (import "testSources/scopeTests/file1.sp")
 
-(bind 3 c)
-(test1 1 2)
+(let ((c 3))
+  (test1 1 2))
