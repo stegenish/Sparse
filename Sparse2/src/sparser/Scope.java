@@ -7,21 +7,21 @@ import static sparser.SparseBoolean.toSparseBoolean;
 public class Scope {
 
 	private Map<Symbol, Entity> bindings = new HashMap<Symbol, Entity>();
-	private Scope shadowedScope;
-	private Scope globalScope;
+	private Scope containingScope;
+	private Scope moduleScope;
 	private Scope importingScope;
 
 	public Scope() {
-		globalScope = this;
+		moduleScope = this;
 	}
 
-	public Scope(Scope containingScope, Scope globalScope) {
-		this.shadowedScope = containingScope;
-		this.globalScope = globalScope;
+	public Scope(Scope containingScope, Scope moduleScope) {
+		this.containingScope = containingScope;
+		this.moduleScope = moduleScope;
 	}
 
-	public Scope(Scope containingScope, Scope globalScope, Scope importingScope) {
-		this(containingScope, globalScope);
+	public Scope(Scope containingScope, Scope moduleScope, Scope importingScope) {
+		this(containingScope, moduleScope);
 		this.importingScope = importingScope;
 	}
 
@@ -34,33 +34,33 @@ public class Scope {
 	}
 
 	private Scope getParentScope() {
-		if(this.isGlobalScope()) {
+		if(this.isModuleScope()) {
 			return null;
 		}
-		if(this.isShadowingScope()) {
-			return shadowedScope;
+		if(this.isContained()) {
+			return containingScope;
 		}
-		return globalScope;
+		return moduleScope;
 	}
 
 	public void bind(Symbol symbol, Entity value) {
 		bindings.put(symbol, value);
 	}
 
-	public Scope createFunctionScope() {
-		return new Scope(null, globalScope);
+	public Scope createStrangeScope() {
+		return new Scope(null, moduleScope);
 	}
 	
-	public Scope createShadowScope() {
-		return new Scope(this, globalScope);
+	public Scope createLexicalScope() {
+		return new Scope(this, moduleScope);
 	}
 
-	private boolean isGlobalScope() {
-		return globalScope == this;
+	private boolean isModuleScope() {
+		return moduleScope == this;
 	}
 	
-	private boolean isShadowingScope() {
-		return shadowedScope != null;
+	private boolean isContained() {
+		return containingScope != null;
 	}
 
 	public Entity isBound(Symbol symbol) {
@@ -68,7 +68,7 @@ public class Scope {
 	}
 
 	public Scope GetGlobalScope() {
-		return globalScope;
+		return moduleScope;
 	}
 	
 	public Entity export(Symbol symbol) {

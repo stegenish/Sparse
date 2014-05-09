@@ -29,47 +29,47 @@ public class ScopeTest extends SparserTestCase {
 	}
 
 	public void testCreateFunctionScope() throws Exception {
-		Scope subScope = globalScope.createFunctionScope();
+		Scope subScope = globalScope.createStrangeScope();
 		Symbol symbol = getSymbol("add");
 		Entity binding = subScope.getBinding(symbol);
 		assertSame(globalScope.getBinding(symbol), binding);
 	}
 
 	public void testCreateSubFunctionScope() throws Exception {
-		Scope subScope = globalScope.createFunctionScope();
+		Scope subScope = globalScope.createStrangeScope();
 		Symbol symbol = getSymbol("testSymbol");
 		Entity value = new SparseString("hello hello");
 		subScope.bind(symbol, value);
-		Scope subSubScope = subScope.createFunctionScope();
+		Scope subSubScope = subScope.createStrangeScope();
 		assertNull(subSubScope.getBinding(symbol));
 	}
 	
 	public void testCreateShadowScope() throws Exception {
-		Scope subScope = globalScope.createFunctionScope();
+		Scope subScope = globalScope.createStrangeScope();
 		Symbol symbol = getSymbol("testSymbol");
 		Entity value = new SparseString("hello hello");
 		subScope.bind(symbol, value);
-		Scope subSubScope = subScope.createShadowScope();
+		Scope subSubScope = subScope.createLexicalScope();
 		assertEquals(value, subSubScope.getBinding(symbol));
 	}
 	
 	public void testCreateShadowedShadowScope() throws Exception {
-		Scope shadowScope = globalScope.createFunctionScope();
+		Scope shadowScope = globalScope.createStrangeScope();
 		Symbol symbol = getSymbol("testSymbol");
 		Entity value = new SparseString("hello hello");
 		shadowScope.bind(symbol, value);
-		Scope shadowedShadowScope = shadowScope.createShadowScope().createShadowScope();
+		Scope shadowedShadowScope = shadowScope.createLexicalScope().createLexicalScope();
 		Entity shadowedShadowValue = new SparseString("another string");
 		shadowedShadowScope.bind(symbol, shadowedShadowValue);
 		assertEquals(shadowedShadowValue, shadowedShadowScope.getBinding(symbol));
 	}
 
 	public void testCreateFunctionShadowScopeHidesAllShadowScopes() throws Exception {
-		Scope shadowScope = globalScope.createFunctionScope();
+		Scope shadowScope = globalScope.createStrangeScope();
 		Symbol symbol = getSymbol("testSymbol");
 		Entity value = new SparseString("hello hello");
 		shadowScope.bind(symbol, value);
-		Scope shadowedShadowScope = shadowScope.createShadowScope().createFunctionScope();
+		Scope shadowedShadowScope = shadowScope.createLexicalScope().createStrangeScope();
 		assertEquals(null, shadowedShadowScope.getBinding(symbol));
 	}
 	

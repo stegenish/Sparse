@@ -23,6 +23,6 @@ package sparser;
 public class FunctionScopeSemantics implements ScopeSemantics {
 	
 	public Scope createNewScope(Scope scope) {
-		return scope.createFunctionScope();
+		return null;//;scope.createStrangeScope();
 	}
 }

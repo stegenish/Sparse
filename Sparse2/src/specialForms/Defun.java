@@ -20,7 +20,7 @@ public class Defun extends SpecialForm {
 		Symbol name = args.nextSymbol();
 		SparseList params = args.nextList();
 		Code code = createCode(args);
-		Callable userDefinedCallable = createUserDefinedCallable(name, params, code);
+		Callable userDefinedCallable = createUserDefinedCallable(name, params, code, scope);
 		scope.bind(name, userDefinedCallable);
 		return userDefinedCallable;
 	}
@@ -33,7 +33,7 @@ public class Defun extends SpecialForm {
 		return code;
 	}
 
-	protected Callable createUserDefinedCallable(Symbol name, SparseList params, Code code) {
-		return new UserDefinedFunction(name.toString(), params, code);
+	protected Callable createUserDefinedCallable(Symbol name, SparseList params, Code code, Scope scope) {
+		return new UserDefinedFunction(name.toString(), params, code, scope.createLexicalScope());
 	}
 }
