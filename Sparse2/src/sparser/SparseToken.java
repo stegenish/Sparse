@@ -35,11 +35,15 @@ public class SparseToken extends Token {
 	 * The token is a number
 	 */
 	public final static int INTEGER = 5;
+	
+	public final static int COMMENT = 6;
 
 	/**
 	 * The token is anything not mentioned above
 	 */
 	public final static int SYMBOL = Integer.MAX_VALUE;
+
+	
 
 	/**
 	 * Holds the type of the Token
@@ -83,6 +87,8 @@ public class SparseToken extends Token {
 			return "READER_MACRO";
 		case SYMBOL:
 			return "SYMBOL";
+		case COMMENT:
+			return "COMMENT";
 		default:
 			return "Death and decay, an unknown token type";
 		}
@@ -100,6 +106,9 @@ public class SparseToken extends Token {
         }
         else if(s.charAt(0) == '"') {
             type = STRING;
+        }
+        else if(s.charAt(0) == '"') {
+            type = COMMENT;
         }
         else {
         	if(s.matches("^-?\\d+$")) {

@@ -73,6 +73,15 @@ public class SparseList implements Entity, Iterable<Entity> {
 		}
 		return sparseList;
 	}
+	
+	@ExposedSparseFunction(name = "last")
+	public Entity last() {
+		if (next == null) {
+			return element;
+		} else {
+			return next.last();
+		}
+	}
 
 	public Iterator<Entity> iterator() {
 		return new SparseListIterator(this);
@@ -84,6 +93,11 @@ public class SparseList implements Entity, Iterable<Entity> {
 
 	@ExposedSparseFunction(name = "empty")
 	public SparseBoolean isEmpty() {
+		return toSparseBoolean(isNil());
+	}
+	
+	@ExposedSparseFunction(name = "is-nil")
+	public SparseBoolean sparseIsNil() {
 		return toSparseBoolean(isNil());
 	}
 	

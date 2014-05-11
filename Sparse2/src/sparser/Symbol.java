@@ -30,7 +30,7 @@ public class Symbol implements Entity
     {
         Entity value = scope.getBinding(this);
         if(value == null) {
-        	throw new SparseException("Symbol not bound " + name);
+        	throw new SparseException("Symbol not bound: " + name);
         }
 		return value;
     }

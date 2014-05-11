@@ -17,8 +17,10 @@ import sparser.builtins.List;
 import sparser.builtins.Multiply;
 import sparser.builtins.Print;
 import sparser.builtins.Subtract;
+import specialForms.AssertThrowsException;
 import specialForms.Bind;
 import specialForms.Boundp;
+import specialForms.DefSpecial;
 import specialForms.Defun;
 import specialForms.Eval;
 import specialForms.If;
@@ -42,11 +44,14 @@ public class Sparser
 
 	private void initialBindings(Scope scope) {
 		bindSymbol("assert", new AssertEquals(), scope);
+		bindSymbol("assert-throws-exception", new AssertThrowsException(), scope);
 		bindSymbol("add", new Add(), scope);
 		bindSymbol("+", new Add(), scope);
 		bindSymbol("-", new Subtract(), scope);
 		bindSymbol("bind", new Bind(scope), scope);
+		bindSymbol("set", new specialForms.Set(), scope);
 		bindSymbol("defun", new Defun(), scope);
+		bindSymbol("defspecial", new DefSpecial(), scope);
 		bindSymbol("multiply", new Multiply(), scope);
 		bindSymbol("*", new Multiply(), scope);
 		bindSymbol("print", new Print(), scope);
@@ -54,7 +59,6 @@ public class Sparser
 		bindSymbol("if", new If(), scope);
 		bindSymbol("true", SparseBoolean.True, scope);
 		bindSymbol("false", SparseBoolean.False, scope);
-		bindSymbol("if", new If(), scope);
 		bindSymbol("let", new Let(), scope);
 		bindSymbol("list", new List(), scope);
 		bindSymbol("eval", new Eval(), scope);
@@ -67,6 +71,7 @@ public class Sparser
 		exposeType(SparseList.class);
 		exposeType(SparseInt.class);
 		exposeType(Entity.class);
+		exposeType(SparseBoolean.class);
 	}
 	
 	public void bindSymbol(String string, Entity entity, Scope scope) {
@@ -117,6 +122,7 @@ public class Sparser
 		        throw new SyntaxErrorException(token, "Unexpected token. " +
 		                            "Expected a list, symbol or string");
 		}
+		
 		return entity;
 	}
 

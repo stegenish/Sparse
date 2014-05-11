@@ -17,7 +17,7 @@ public class SparseTokeniserTest extends TestCase
     private static final String PATH = "testSources/";
 
     private SparseTokeniser        toks;
-    private Vector<String>                 answers;
+    private Vector<String>         answers;
     private int                    numAnswers = 0;
     /**
      * Constructor for SparseTokeniserTest.
@@ -53,6 +53,8 @@ public class SparseTokeniserTest extends TestCase
             answers.add(line);
             line = file.readLine();
         }
+        
+        file.close();
     }
 
     public void testNext()

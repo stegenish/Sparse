@@ -30,7 +30,7 @@ public class SparseTokeniser extends StrategyTokeniser
             str.append((char)c);
             c = file.read();
         }
-        setString(str.toString());
+        setString(str.toString().replaceAll("\r\n", "\n"));
         file.close();
     }
     

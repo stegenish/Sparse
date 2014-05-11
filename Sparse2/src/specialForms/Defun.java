@@ -21,7 +21,7 @@ public class Defun extends SpecialForm {
 		SparseList params = args.nextList();
 		Code code = createCode(args);
 		Callable userDefinedCallable = createUserDefinedCallable(name, params, code, scope);
-		scope.bind(name, userDefinedCallable);
+		scope.moduleBind(name, userDefinedCallable);
 		return userDefinedCallable;
 	}
 	

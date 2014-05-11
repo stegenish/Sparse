@@ -50,12 +50,4 @@ public class ArgumentListTest extends SparserTestCase
             i++;
         }
     }
-
-//    public void testBoundInGlobalScope() throws Exception {
-//    	ArgumentList args = ArgumentList.createArgumentList();
-//    	Scope scope = new Scope();
-//    	Symbol s = new Symbol("sym");
-//    	s.bind(SparseInt.valueOf(3));
-//    	args.
-//	}
 }

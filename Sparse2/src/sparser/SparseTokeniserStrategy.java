@@ -10,9 +10,11 @@ import Tokeniser.TokeniserStrategy;
  * @author Thomas Stegen
  */
 public class SparseTokeniserStrategy extends TokeniserStrategy {
+	
 	private static final int NOT_COLLECTING_TOKEN = 1;
 	private static final int COLLECTING_TOKEN = 2;
-	private static final int COLLECT_STRING = 5;
+	private static final int COLLECTING_STRING = 5;
+	private static final int COLLECTING_COMMENT = 6;
 
 	/* Holds the current state of the tokeniser */
 	private int state = NOT_COLLECTING_TOKEN;
@@ -33,12 +35,29 @@ public class SparseTokeniserStrategy extends TokeniserStrategy {
 		case COLLECTING_TOKEN:
 			retVal = handleCOLLECT_TOKEN(c);
 			break;
-		case COLLECT_STRING:
+		case COLLECTING_STRING:
 			retVal = handleCOLLECT_STRING(c);
+			break;
+		case COLLECTING_COMMENT:
+			retVal = handleCOLLECTING_COMMENT(c);
 			break;
 		}
 
 		return retVal;
+	}
+
+	private boolean handleCOLLECTING_COMMENT(char c) {
+		if (isNewLine(c)) {
+			state = NOT_COLLECTING_TOKEN;
+			return false;
+		} else {
+			state = COLLECTING_COMMENT;
+			return false;
+		}
+	}
+
+	private boolean isNewLine(char c) {
+		return c == '\n';
 	}
 
 	private boolean handleNOT_COLLECTING_TOKEN(char c) {
@@ -50,7 +69,7 @@ public class SparseTokeniserStrategy extends TokeniserStrategy {
 			append(c);
 			return true;
 		} else if (c == '"') {
-			state = COLLECT_STRING;
+			state = COLLECTING_STRING;
 			append(c);
 			return false;
 		} else if(c == '\'') {
@@ -58,6 +77,9 @@ public class SparseTokeniserStrategy extends TokeniserStrategy {
 			readerMacro = true;
 			append(c);
 			return true;
+		} else if(c == ';') {
+			state = COLLECTING_COMMENT;
+			return false;
 		} else {
 			state = COLLECTING_TOKEN;
 			append(c);
@@ -74,14 +96,18 @@ public class SparseTokeniserStrategy extends TokeniserStrategy {
 			setGoBack(1);
 			return true;
 		} else if (c == '"') {
-			state = COLLECT_STRING;
+			state = COLLECTING_STRING;
 			append(c);
 			return true;
 		} else if(c == '\'') {
 			state = NOT_COLLECTING_TOKEN;
 			setGoBack(1);
 			return true;
-		} else {
+		} else if(c == ';') {
+			state = COLLECTING_COMMENT;
+			setGoBack(1);
+			return true;
+		}else {
 			state = COLLECTING_TOKEN;
 			append(c);
 			return false;

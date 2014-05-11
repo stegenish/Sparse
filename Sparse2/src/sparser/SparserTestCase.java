@@ -25,7 +25,7 @@ public abstract class SparserTestCase extends TestCase {
 
 		testFunction = new TestBuiltin();
 		parser.bindSymbol("testFun", testFunction, globalScope);
-		scope = globalScope.createStrangeScope();
+		scope = globalScope.createLexicalScope();
 	}
 
 	protected SparseInt sparseInt(String string) {

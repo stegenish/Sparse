@@ -12,7 +12,7 @@ public class SourceTest extends SparserSourceTestCase {
 	}
 	
 	public void testDefSpecial() throws Exception {
-		//run("defspecialTest.sp");
+		run("defspecialTest.sp");
 	}
 
 	public void testScope() throws Exception {
@@ -29,5 +29,17 @@ public class SourceTest extends SparserSourceTestCase {
 	
 	public void testImport() throws Exception {
 		run("importTest.sp");
+	}
+	
+	public void testSet() throws Exception {
+		run("setTest.sp");
+	}
+	
+	public void testClosure() throws Exception {
+		run("closureTest.sp");
+	}
+	
+	public void testComment() throws Exception {
+		run("commentTest.sp");
 	}
 }

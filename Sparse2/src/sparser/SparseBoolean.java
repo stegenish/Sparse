@@ -32,4 +32,9 @@ public class SparseBoolean implements Entity {
 	public SparseBoolean equal(Object other) {
 		return toSparseBoolean(this == other);
 	}
+	
+	@ExposedSparseFunction(name = "not")
+	public SparseBoolean not() {
+		return this == True ? SparseBoolean.False : SparseBoolean.True;
+	}
 }

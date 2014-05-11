@@ -5,6 +5,7 @@ import java.util.List;
 
 public class SparseException extends RuntimeException {
 
+	private static final long serialVersionUID = -4069753322208352984L;
 	List<String> stackTrace = new LinkedList<String>();
 
 	public SparseException(Exception e) {
