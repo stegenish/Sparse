@@ -143,32 +143,11 @@ public abstract class TemplateTokeniser implements Tokeniser
     }
 
     /**
-     * @see Tokeniser.Tokeniser#hasMore()
-     */
-    public boolean hasMore()
-    {
-        return pos < tokens.size();
-    }
-
-    /**
      * @see Tokeniser.Tokeniser#countTokens()
      */
     public int countTokens()
     {
         return tokens.size() - pos;
-    }
-
-    /**
-     * @see Tokeniser.Tokeniser#move(int)
-     */
-    public boolean move(int n)
-    {
-        if(((pos + n) < 0) || ((pos + n) > tokens.size()))
-        {
-            return false;
-        }
-        pos += n;
-        return true;
     }
 
     /**

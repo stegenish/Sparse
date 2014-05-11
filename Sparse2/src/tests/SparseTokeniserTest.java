@@ -6,6 +6,8 @@ import sparser.*;
 import java.util.*;
 import java.io.*;
 
+import Tokeniser.Token;
+
 /*
  * Created on Aug 6, 2004
  */
@@ -19,7 +21,6 @@ public class SparseTokeniserTest extends TestCase
 
     private SparseTokeniser        toks;
     private Vector<String>         answers;
-    private int                    numAnswers = 0;
     /**
      * Constructor for SparseTokeniserTest.
      * @param arg0
@@ -50,7 +51,6 @@ public class SparseTokeniserTest extends TestCase
         line = file.readLine();
         while(line != null)
         {
-            numAnswers++;
             answers.add(line);
             line = file.readLine();
         }
@@ -72,25 +72,10 @@ public class SparseTokeniserTest extends TestCase
     public void testNext()
     {
         int i = 0;
-        while(toks.hasMore())
+        Token next;
+        while((next = toks.next()) != null)
         {
-            assertEquals(answers.get(i++), toks.next().getToken());
+			assertEquals(answers.get(i++), next.getToken());
         }
     }
-
-    public void testHasMore()
-    {
-        while(toks.hasMore())
-        {
-            toks.next();
-            numAnswers--;
-        }
-        assertTrue(numAnswers == 0);
-    }
-
-    public void testCountTokens()
-    {
-        assertEquals(numAnswers, toks.countTokens());
-    }
-
 }

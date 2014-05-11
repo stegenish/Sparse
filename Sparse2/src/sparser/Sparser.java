@@ -8,6 +8,7 @@ package sparser;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.Reader;
 import java.io.StringReader;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
@@ -19,6 +20,7 @@ import sparser.builtins.Import;
 import sparser.builtins.List;
 import sparser.builtins.Multiply;
 import sparser.builtins.Print;
+import sparser.builtins.Quit;
 import sparser.builtins.Subtract;
 import specialForms.AssertThrowsException;
 import specialForms.Bind;
@@ -70,6 +72,7 @@ public class Sparser
 		bindSymbol("import", new Import(this), scope);
 		bindSymbol("isbound", new Boundp(), scope);
 		bindSymbol("export", new Export(), scope);
+		bindSymbol("quit", new Quit(), scope);
 		
 		exposeType(SparseList.class);
 		exposeType(SparseInt.class);
@@ -87,19 +90,36 @@ public class Sparser
 		return parseCode();
 	}
 
+	public Code parseReader(Reader code) throws FileNotFoundException, IOException {
+		setReader(code);
+		return parseCode();
+	}
+
+	public void setReader(Reader code) throws IOException,	FileNotFoundException {
+		tokens = new SparseTokeniser(code);
+	}
+	
     private Code parseCode()
     {
     	Code code = new Code();
-    	while(tokens.hasMore()) {
-    		Entity entity = parseNextForm(true);
-    		code.appendEntity(entity);
-    	}
+    	Entity entity = null;
+    	do {
+    		 entity = parseNextForm(true);
+    		 if (entity != null) {
+    			 code.appendEntity(entity);
+    		 }
+    	} while (entity != null);
+    	
         return code;
     }
 
 	public Entity parseNextForm(boolean canEnd) {
 		
 		SparseToken token = nextToken(canEnd);
+		if (token == null) {
+			return null;
+		}
+		
 		Entity entity;
 		switch(token.getType())
 		{
