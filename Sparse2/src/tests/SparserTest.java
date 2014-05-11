@@ -7,6 +7,8 @@
 
 package tests;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.List;
 
 import sparser.Entity;
@@ -139,14 +141,16 @@ public class SparserTest extends SparserTestCase
 	private List<Entity> parseStr(String str) {
 		parser = new Sparser(globalScope);
         List<Entity> lists = null;
-        try
-        {
-            lists = parser.parseString(str).getEntities();
+        try {
+			lists = parser.parseString(str).getEntities();
         }
-        catch(SyntaxErrorException e)
-        {
+        catch(SyntaxErrorException e) {
             fail();
-        }
+        } catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 		return lists;
 	}
 

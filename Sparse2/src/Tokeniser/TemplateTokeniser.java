@@ -5,6 +5,7 @@
  */
 package Tokeniser;
 
+import java.io.StringReader;
 import java.util.Stack;
 import java.util.Vector;
 
@@ -171,9 +172,9 @@ public abstract class TemplateTokeniser implements Tokeniser
     }
 
     /**
-     * @see Tokeniser.Tokeniser#setString(java.lang.String)
+     * @see Tokeniser.Tokeniser#setString(java.lang.String, StringReader)
      */
-    public void setString(String s)
+    public void setString(String s, StringReader source)
     {
     	//not implemented
     }

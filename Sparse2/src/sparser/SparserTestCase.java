@@ -1,5 +1,8 @@
 package sparser;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
+
 import junit.framework.TestCase;
 import sparser.builtins.TestBuiltin;
 import specialForms.TestSpecialForm;
@@ -44,25 +47,25 @@ public abstract class SparserTestCase extends TestCase {
 		return parser.getSymbol(symName);
 	}
 
-	protected Code parseProgram(String form) {
+	protected Code parseProgram(String form) throws FileNotFoundException, IOException {
 		return parser.parseString(form);
 	}
 
-	protected Entity parseEntity(String code) {
+	protected Entity parseEntity(String code) throws FileNotFoundException, IOException {
 		return parseProgram(code).getEntities().get(0);
 	}
 
-	protected Code parseString(String code2) {
+	protected Code parseString(String code2) throws FileNotFoundException, IOException {
 		return parser.parseString(code2);
 	}
 
-	public Entity executeString(String str) {
+	public Entity executeString(String str) throws FileNotFoundException, IOException {
 		Code code = parseString(str);
 		Entity firstElement = code.execute(globalScope);
 		return firstElement;
 	}
 
-	public void checkIncorrectArgument(String code, String expected) {
+	public void checkIncorrectArgument(String code, String expected) throws FileNotFoundException, IOException {
 		Exception caught = null;
 		try {
 			executeString(code);

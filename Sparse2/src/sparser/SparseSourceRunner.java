@@ -37,7 +37,7 @@ public class SparseSourceRunner {
 		return fileBuffer;
 	}
 
-	public void run() {
+	public void run() throws FileNotFoundException, IOException {
 		Scope scope = new Scope();
 		Sparser parser = new Sparser(scope);
 		Code code = parser.parseString(source);

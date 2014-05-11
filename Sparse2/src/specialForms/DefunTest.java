@@ -1,6 +1,9 @@
 package specialForms;
 
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
+
 import sparser.ArgumentList;
 import sparser.Callable;
 import sparser.Entity;
@@ -60,6 +63,14 @@ public class DefunTest extends SparserTestCase {
 	}
 
 	private Callable parseFunction(String program) {
-		return (Callable) executeString(program);
+		try {
+			return (Callable) executeString(program);
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+		return null;
 	}
 }

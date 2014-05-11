@@ -2,6 +2,7 @@ package tests;
 
 import junit.framework.TestCase;
 import sparser.*;
+
 import java.util.*;
 import java.io.*;
 
@@ -44,7 +45,7 @@ public class SparseTokeniserTest extends TestCase
         BufferedReader file =
         new BufferedReader(
         new FileReader(new File(PATH + "tokeniseranswer")));
-        toks = new SparseTokeniser(new File(PATH + "tokeniser"));
+        
         answers = new Vector<String>();
         line = file.readLine();
         while(line != null)
@@ -55,6 +56,17 @@ public class SparseTokeniserTest extends TestCase
         }
         
         file.close();
+        
+        BufferedReader file2 = new BufferedReader(new FileReader(new File(PATH + "tokeniser")));
+        StringBuffer fileContent = new StringBuffer();
+        int c;
+        while ((c = file2.read()) != -1) {
+        	fileContent.append((char)c);
+        }
+        
+        toks = new SparseTokeniser(new StringReader(fileContent.toString()));
+		
+		file2.close();
     }
 
     public void testNext()

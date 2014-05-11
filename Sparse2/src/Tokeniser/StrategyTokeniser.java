@@ -5,11 +5,11 @@
  */
 package Tokeniser;
 
+import java.io.IOException;
+import java.io.Reader;
+import java.io.StringReader;
 import java.util.Stack;
 import java.util.Vector;
-
-import Tokeniser.Token;
-import Tokeniser.Tokeniser;
 
 /**
  * @author Thomas Stegen 200111876
@@ -28,7 +28,7 @@ public class StrategyTokeniser implements Tokeniser
     /**
      * The characters to parse.
      */
-    private String string;
+    private Reader source;
 
     /**
      * Holds all the tokens after they have been generated
@@ -70,7 +70,8 @@ public class StrategyTokeniser implements Tokeniser
     public StrategyTokeniser(TokeniserStrategy strat, String str)
     {
         this(strat);
-        string = str;
+        setString(new StringReader(str + " "));
+        
         getTokens();
     }
 
@@ -91,11 +92,12 @@ public class StrategyTokeniser implements Tokeniser
 
     /**
      * Does the internal work of generating each token.
+     * @throws IOException 
      */
     private void getTokens()
     {
+    	int readChar;
         char c;
-        int strpos = 0;
         boolean haveToken = false;
         int back = 0;  /*how many positions to backtrack*/
         Token tok;
@@ -105,55 +107,61 @@ public class StrategyTokeniser implements Tokeniser
         int tokCol = 1;  /*The start of the currently parsed token*/
         Stack<Integer> colStack = new Stack<Integer>(); /*holds previous max values of column*/
 
-        while(strpos < string.length())
-        {
-            c = string.charAt(strpos++);
-            haveToken = strategy.nextLetter(c); /***HOOK***/
-
-            if(c == '\n')
-            {
-                colStack.push(new Integer(column));
-                column = 0;
-                line++;
-            }
-            column++;
-
-            if(haveToken)
-            {
-                tok = strategy.createToken();
-                tok.setLine(tokLine);
-                tok.setColumn(tokCol);
-                back = strategy.goBack();
-                strategy.reset();
-                
-                if(back < 0)
-                {
-                    throw new TokeniserException("goBack cannot return  "+
-                                                "negative value");
-                }
-
-                /*Do not go before the beginning of the string*/
-                if((strpos - back) < 0)
-                {
-                    throw new TokeniserException("goBack caused new string " +
-                                                "position to be less than 0");
-                }
-
-                strpos -= back;
-                tokens.add(tok);
-
-                column -= back;
-                while(column < 1)
-                {
-                    int tmp = colStack.pop().intValue();
-                    column = tmp + column;
-                    line--;
-                }
-
-                tokLine = line;
-                tokCol = column;
-            }
-        }
+        try {
+	        while((readChar = source.read()) != -1)
+	        {
+	        	c = (char)readChar;
+	            haveToken = strategy.nextLetter(c); /***HOOK***/
+	
+	            if(c == '\n')
+	            {
+	                colStack.push(new Integer(column));
+	                column = 0;
+	                line++;
+	            }
+	            column++;
+	
+	            if(haveToken)
+	            {
+	                tok = strategy.createToken();
+	                tok.setLine(tokLine);
+	                tok.setColumn(tokCol);
+	                back = strategy.goBack();
+	                strategy.reset();
+	                
+	                if(back < 0)
+	                {
+	                    throw new TokeniserException("goBack cannot return  "+
+	                                                "negative value");
+	                }
+	
+	                long skipped = source.skip(-back);
+	                /*Do not go before the beginning of the string*/
+	                if(skipped != 0 && skipped != -back)
+	                {
+	                    throw new TokeniserException("goBack caused new string " +
+	                                                "position to be less than 0");
+	                }
+	                
+	                
+	                tokens.add(tok);
+	
+	                column -= back;
+	                while(column < 1)
+	                {
+	                    int tmp = colStack.pop().intValue();
+	                    column = tmp + column;
+	                    line--;
+	                }
+	
+	                tokLine = line;
+	                tokCol = column;
+	            }
+	        }
+        } catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 
         endOfInput(tokLine, tokCol);
     }
@@ -201,12 +209,15 @@ public class StrategyTokeniser implements Tokeniser
 
 
     /**
-     * @see Tokeniser#setString(java.lang.String)
+     * @see Tokeniser#setString(java.lang.String, StringReader)
      */
-    public void setString(String s)
+    public void setString(Reader source)
     {
-        strategy.reset();        /***HOOK***/
-        string = s;
+        strategy.reset();
+        
+        //add a space because the reader is retarded and can't 
+        //skip if we have read the last character
+        this.source = source;
         tokens.clear();
         pos = 0;
         getTokens();

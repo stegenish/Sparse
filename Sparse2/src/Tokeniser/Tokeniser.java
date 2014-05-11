@@ -1,5 +1,7 @@
 package Tokeniser;
 
+import java.io.Reader;
+
 
 /*
  * Created on 02-Feb-2004
@@ -46,6 +48,7 @@ public interface Tokeniser
      * Start parsing a new string. All unused tokens from the previous
      * String will be discarded.
      * @param s The new String.
+     * @param source TODO
      */
-    public void setString(String s);
+    public void setString(Reader source);
 }

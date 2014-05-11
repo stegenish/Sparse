@@ -6,6 +6,9 @@
 
 package sparser;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.StringReader;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 
@@ -79,8 +82,8 @@ public class Sparser
 		scope.bind(symbols.getSymbol(str), entity);
 	}
 
-	public Code parseString(String code) {
-		tokens = new SparseTokeniser(code);
+	public Code parseString(String code) throws FileNotFoundException, IOException {
+		tokens = new SparseTokeniser(new StringReader(code + " "));
 		return parseCode();
 	}
 

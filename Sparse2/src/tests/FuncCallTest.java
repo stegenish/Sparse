@@ -8,6 +8,8 @@
 package tests;
 
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.math.BigInteger;
 import java.util.List;
 
@@ -85,7 +87,16 @@ public class FuncCallTest extends SparserTestCase
 	}
 
 	private SparseList parseSingleForm(String form) {
-		List<Entity> lists = parseProgram(form).getEntities();
+		List<Entity> lists = null;
+		try {
+			lists = parseProgram(form).getEntities();
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
         SparseList list = (SparseList)lists.get(0);
 		return list;
 	}
