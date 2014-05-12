@@ -22,13 +22,13 @@ public class SparseRepl {
 
 		@Override
 		public int read(char[] buffer, int offset, int length) throws IOException {
-			System.out.println("Sparse> ");
+			System.out.print("Sparse> ");
 			return console.read(buffer, offset, length);
 		}
 		
-		public boolean ready() {
+		/*public boolean ready() {
 			return false;
-		}
+		}*/
 	}
 	
 	public static void main(String[] args) throws IOException {
