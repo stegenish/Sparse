@@ -11,7 +11,7 @@ public class SparseTokeniserTest extends TestCase {
 		SparseTokeniser tokeniser = new SparseTokeniser(new StringReader(" ' asd (''xcv) "));
 		Token next; 
 		while((next = tokeniser.next()) != null) {
-			System.out.println(tokeniser.next());
+			System.out.println(next);
 		}
 	}
 }
