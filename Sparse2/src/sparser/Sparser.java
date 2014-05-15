@@ -74,7 +74,6 @@ public class Sparser
 		bindSymbol("isbound", new Boundp(), scope);
 		bindSymbol("export", new Export(), scope);
 		bindSymbol("quit", new Quit(), scope);
-		bindSymbol("commaForm", new CommaForm(), scope);
 		
 		exposeType(SparseList.class);
 		exposeType(SparseInt.class);
