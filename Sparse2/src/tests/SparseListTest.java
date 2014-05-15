@@ -99,10 +99,8 @@ public class SparseListTest extends SparserTestCase
 		try {
 			return (SparseList)(parser.parseString(str).getEntities().get(0));
 		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		

@@ -55,8 +55,12 @@ public abstract class SparserTestCase extends TestCase {
 		return parseProgram(code).getEntities().get(0);
 	}
 
-	protected Code parseString(String code2) throws FileNotFoundException, IOException {
-		return parser.parseString(code2);
+	protected Code parseString(String code) throws FileNotFoundException, IOException {
+		return parser.parseString(code);
+	}
+	
+	protected Entity parseForm(String code) throws FileNotFoundException, IOException {
+		return parser.parseString(code).getEntities().get(0);
 	}
 
 	public Entity executeString(String str) throws FileNotFoundException, IOException {

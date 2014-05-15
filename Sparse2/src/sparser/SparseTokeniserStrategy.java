@@ -72,7 +72,7 @@ public class SparseTokeniserStrategy extends TokeniserStrategy {
 			state = COLLECTING_STRING;
 			append(c);
 			return false;
-		} else if(c == '\'') {
+		} else if(c == '\'' || c == '`' || c == ',') {
 			state = NOT_COLLECTING_TOKEN;
 			readerMacro = true;
 			append(c);

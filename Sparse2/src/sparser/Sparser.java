@@ -25,6 +25,7 @@ import sparser.builtins.Subtract;
 import specialForms.AssertThrowsException;
 import specialForms.Bind;
 import specialForms.Boundp;
+import specialForms.CommaForm;
 import specialForms.DefSpecial;
 import specialForms.Defun;
 import specialForms.Eval;
@@ -73,6 +74,7 @@ public class Sparser
 		bindSymbol("isbound", new Boundp(), scope);
 		bindSymbol("export", new Export(), scope);
 		bindSymbol("quit", new Quit(), scope);
+		bindSymbol("commaForm", new CommaForm(), scope);
 		
 		exposeType(SparseList.class);
 		exposeType(SparseInt.class);
@@ -90,13 +92,13 @@ public class Sparser
 		return parseCode();
 	}
 
-	public Code parseReader(Reader code) throws FileNotFoundException, IOException {
-		setReader(code);
+	public Code parseReader(Reader source) throws FileNotFoundException, IOException {
+		setReader(source);
 		return parseCode();
 	}
 
-	public void setReader(Reader code) throws IOException,	FileNotFoundException {
-		tokens = new SparseTokeniser(code);
+	public void setReader(Reader source) throws IOException, FileNotFoundException {
+		tokens = new SparseTokeniser(source);
 	}
 	
     private Code parseCode()
@@ -139,7 +141,7 @@ public class Sparser
 		    	entity = parseString(token);
 		        break;
 		    case SparseToken.READER_MACRO:
-		    	entity = readerMacro();
+		    	entity = readerMacro(token);
 		    	break;
 		    default:
 		        throw new SyntaxErrorException(token, "Unexpected token. " +
@@ -153,11 +155,65 @@ public class Sparser
 		return new SparseInt(token.getToken());
 	}
 
-	private Entity readerMacro() {
+	private Entity readerMacro(SparseToken token) {
+		switch (token.getToken()) {
+		case "'":
+			return quoteReaderMacro();
+		case "`":
+			return backquoteReaderMacro();
+		case ",":
+			return commaReaderMacro();
+		}
+		
+		throw new SparseException("Unrecognised reader_macro " + token);
+	}
+
+	private Entity quoteReaderMacro() {
+		Entity form = parseNextForm(false);
+		SparseList sparseList = quoteForm(form);
+		return sparseList;
+	}
+
+	private SparseList quoteForm(Entity quotedForm) {
 		SparseList sparseList = new SparseList();
 		sparseList.append(getSymbol("quote"));
-		sparseList.append(parseNextForm(false));
+		sparseList.append(quotedForm);
 		return sparseList;
+	}
+	
+	private static final ReaderMacroCommaMarker commaMarker = new ReaderMacroCommaMarker();
+	
+	private Entity backquoteReaderMacro() {
+		Entity form = parseNextForm(false);
+		if (form instanceof Symbol || form instanceof SparseInt) {
+			return quoteForm(form);
+		}
+		
+		if (form instanceof SparseList) {
+			return handleBackquotedList((SparseList)form);
+		}
+		
+		return null;
+	}
+
+	private Entity handleBackquotedList(SparseList listForm) {
+		SparseList newForm = new SparseList().append(symbols.getSymbol("list"));
+		for(Entity entity : listForm) {
+			if (entity instanceof SparseList) {
+				SparseList listEntity = (SparseList)entity;
+				if (listEntity.getFirstElement() == commaMarker) {
+					newForm.append(((SparseList)listEntity.rest()).getFirstElement());
+				}
+			} else {
+				newForm.append(quoteForm(entity));	
+			}
+		}
+		
+		return newForm;
+	}
+	
+	private Entity commaReaderMacro() {
+		return new SparseList().append(commaMarker).append(parseNextForm(true));
 	}
 
 	private SparseList parseList()
@@ -223,5 +279,25 @@ public class Sparser
 			}
 		}
 	}
+	
+	private static class ReaderMacroCommaMarker implements Entity {
+
+		@Override
+		public Entity execute(Scope scope) {
+			return SparseNull.theNull;
+		}
+
+		@Override
+		public String createString() {
+			return "#comma-marker";
+		}
+
+		@Override
+		public SparseBoolean equal(Object other) {
+			return SparseBoolean.toSparseBoolean(this == other);
+		}
+	}
 }
+
+
 

@@ -25,10 +25,6 @@ public class SparseRepl {
 			System.out.print("Sparse> ");
 			return console.read(buffer, offset, length);
 		}
-		
-		/*public boolean ready() {
-			return false;
-		}*/
 	}
 	
 	public static void main(String[] args) throws IOException {

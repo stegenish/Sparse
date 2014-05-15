@@ -46,7 +46,7 @@ public class SparseList implements Entity, Iterable<Entity> {
 	}
 
 	@ExposedSparseFunction(name = "append")
-	public void append(Entity elem) {
+	public SparseList append(Entity elem) {
 		if(element() == SparseNull.theNull) {
     		element(elem);
     	} else if(next() == null) {
@@ -55,6 +55,8 @@ public class SparseList implements Entity, Iterable<Entity> {
     	} else {
     		next().append(elem);
     	}
+		
+		return this;
 	}
 
 	@ExposedSparseFunction(name = "first")

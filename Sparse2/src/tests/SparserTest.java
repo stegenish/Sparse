@@ -161,13 +161,32 @@ public class SparserTest extends SparserTestCase
         assertEquals(((SparseInt)lists.get(0)).getValue().intValue(), 1234);
     }
 
-    public void testNumber2() throws Exception
-    {
+    public void testNumber2() throws Exception {
         List<Entity> lists = parseStr(number2);
         assertTrue(lists.get(0) instanceof SparseList);
         SparseList list = (SparseList)(lists.get(0));
         assertTrue(list.getFirstElement() instanceof SparseInt);
         assertEquals(((SparseInt)(list.getFirstElement().execute(globalScope))).getValue().intValue(), 1234);
 
+    }
+    
+    public void testBackquoteReaderMacro_Symbol() throws Exception {
+    	Entity result = executeString("`a");
+    	assertTrue(result instanceof Symbol);
+    }
+    
+    public void testBackquoteReaderMacro_Number() throws Exception {
+    	Entity result = executeString("`3");
+    	assertTrue(result instanceof SparseInt);
+    }
+    
+    public void testBackquoteReaderMacro_List() throws Exception {
+    	Entity result = executeString("`(a)");
+    	assertTrue(result instanceof SparseList);
+    }
+    
+    public void testBackquoteReaderMacro_List_CommaShouldEvaluate() throws Exception {
+    	Entity result = executeString("(let ((a 4)) `(b ,a))");
+    	assertEquals(parseForm("(b 4)"), result);
     }
 }
