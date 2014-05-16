@@ -21,13 +21,15 @@ public abstract class SparserTestCase extends TestCase {
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
-		globalScope = new Scope();
 		testSpecialForm = new TestSpecialForm();
-		parser = new Sparser(globalScope);
-		parser.bindSymbol("test", testSpecialForm, globalScope);
+		
+		Environment environment = new Environment();
+		globalScope = environment.scope;
+		parser = environment.sparser;
+		environment.bindSymbol("test", testSpecialForm, environment.symbols, globalScope);
 
 		testFunction = new TestBuiltin();
-		parser.bindSymbol("testFun", testFunction, globalScope);
+		environment.bindSymbol("testFun", testFunction, environment.symbols, globalScope);
 		scope = globalScope.createLexicalScope();
 	}
 

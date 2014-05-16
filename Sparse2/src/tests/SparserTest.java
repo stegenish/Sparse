@@ -15,7 +15,6 @@ import sparser.Entity;
 import sparser.SparseInt;
 import sparser.SparseList;
 import sparser.SparseString;
-import sparser.Sparser;
 import sparser.SparserTestCase;
 import sparser.Symbol;
 import sparser.SyntaxErrorException;
@@ -139,7 +138,6 @@ public class SparserTest extends SparserTestCase
     }
 
 	private List<Entity> parseStr(String str) {
-		parser = new Sparser(globalScope);
         List<Entity> lists = null;
         try {
 			lists = parser.parseString(str).getEntities();
@@ -188,5 +186,10 @@ public class SparserTest extends SparserTestCase
     public void testBackquoteReaderMacro_List_CommaShouldEvaluate() throws Exception {
     	Entity result = executeString("(let ((a 4)) `(b ,a))");
     	assertEquals(parseForm("(b 4)"), result);
+    }
+    
+    public void testBackquoteReaderMacro_List_CommaAtShouldSplice() throws Exception {
+    	Entity result = executeString("`(1 2 3 ,@(list 4 5 6))");
+    	assertEquals(parseForm("(1 2 3 4 5 6)"), result);
     }
 }
