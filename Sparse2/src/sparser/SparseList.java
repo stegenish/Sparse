@@ -64,6 +64,11 @@ public class SparseList implements Entity, Iterable<Entity> {
 		return element();
 	}
 	
+	@ExposedSparseFunction(name = "second")
+	public Entity getSecondElement() {
+		return next().element();
+	}
+	
 	@ExposedSparseFunction(name = "rest")
 	public Entity rest() {
 		Entity sparseList;

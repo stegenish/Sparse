@@ -14,9 +14,16 @@ import Tokeniser.StrategyTokeniser;
  */
 public class SparseTokeniser extends StrategyTokeniser 
 {
+	private SparseTokeniserStrategy sparseStrategy;
+
 	public SparseTokeniser(Reader source) throws IOException, FileNotFoundException {
 		super(new SparseTokeniserStrategy());
 		
+		sparseStrategy = (SparseTokeniserStrategy)strategy;
 		setString(source);
+	}
+	
+	public void addReaderMacroChar(char c) {
+		sparseStrategy.addReaderMacroChar(c);
 	}
 }

@@ -11,6 +11,9 @@ import sparser.builtins.Multiply;
 import sparser.builtins.Print;
 import sparser.builtins.Quit;
 import sparser.builtins.Subtract;
+import sparser.readerMacro.BackquoteReaderMacro;
+import sparser.readerMacro.CommaReaderMacro;
+import sparser.readerMacro.QuoteReaderMacro;
 import specialForms.AssertThrowsException;
 import specialForms.Bind;
 import specialForms.Boundp;
@@ -34,25 +37,7 @@ public class Environment {
 		initialBindings(symbols, scope);
 	}
 	
-	public void bindSymbol(String name, Entity entity, Symbols symbols, Scope scope) {
-		scope.bind(symbols.getSymbol(name), entity);
-	}
-
-	public void exposeType(Class<? extends Entity> type, Symbols symbols, Scope scope) {
-		Method[] methods = type.getMethods();
-		for (Method method : methods) {
-			Annotation[] declaredAnnotations = method.getDeclaredAnnotations();
-			for (int i = 0; i < declaredAnnotations.length; i++) {
-				Annotation annotation = declaredAnnotations[i];
-				if(annotation instanceof ExposedSparseFunction) {
-					ExposedSparseFunction exposedFunction = (ExposedSparseFunction) annotation;
-					scope.bind(symbols.getSymbol(exposedFunction.name()), new ExposedFunction(exposedFunction, method));
-				}
-			}
-		}
-	}
-
-	public void initialBindings(Symbols symbols, Scope scope) {
+	private void initialBindings(Symbols symbols, Scope scope) {
 		bindSymbol("assert", new AssertEquals(), symbols, scope);
 		bindSymbol("assert-throws-exception", new AssertThrowsException(), symbols, scope);
 		bindSymbol("add", new Add(), symbols, scope);
@@ -74,14 +59,43 @@ public class Environment {
 		bindSymbol("eval", new Eval(), symbols, scope);
 		bindSymbol("while", new While(), symbols, scope);
 		bindSymbol("null", SparseNull.theNull, symbols, scope);
-		
 		bindSymbol("isbound", new Boundp(), symbols, scope);
 		bindSymbol("export", new Export(), symbols, scope);
 		bindSymbol("quit", new Quit(), symbols, scope);
 		
+		exposeInternalTypes(symbols, scope);
+		
+		addReaderMacros();
+	}
+
+	private void addReaderMacros() {
+		sparser.addReaderMacro('\'', new QuoteReaderMacro());
+		sparser.addReaderMacro('`', new BackquoteReaderMacro());
+		sparser.addReaderMacro(',', new CommaReaderMacro());
+	}
+
+	private void exposeInternalTypes(Symbols symbols, Scope scope) {
 		exposeType(SparseList.class, symbols, scope);
 		exposeType(SparseInt.class, symbols, scope);
 		exposeType(Entity.class, symbols, scope);
 		exposeType(SparseBoolean.class, symbols, scope);
+	}
+	
+	public void bindSymbol(String name, Entity entity, Symbols symbols, Scope scope) {
+		scope.bind(symbols.getSymbol(name), entity);
+	}
+
+	public void exposeType(Class<? extends Entity> type, Symbols symbols, Scope scope) {
+		Method[] methods = type.getMethods();
+		for (Method method : methods) {
+			Annotation[] declaredAnnotations = method.getDeclaredAnnotations();
+			for (int i = 0; i < declaredAnnotations.length; i++) {
+				Annotation annotation = declaredAnnotations[i];
+				if(annotation instanceof ExposedSparseFunction) {
+					ExposedSparseFunction exposedFunction = (ExposedSparseFunction) annotation;
+					scope.bind(symbols.getSymbol(exposedFunction.name()), new ExposedFunction(exposedFunction, method));
+				}
+			}
+		}
 	}
 }

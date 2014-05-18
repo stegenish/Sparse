@@ -10,11 +10,10 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.Reader;
 import java.io.StringReader;
+import java.util.HashMap;
 
 import sparser.builtins.Import;
-import sparser.readerMacro.BackquoteReaderMacro;
-import sparser.readerMacro.CommaReaderMacro;
-import sparser.readerMacro.QuoteReaderMacro;
+import sparser.readerMacro.ReaderMacro;
 
 /**
   * @author  Administrator
@@ -25,6 +24,7 @@ public class Sparser
     private Symbols symbols;
 	public Scope globalScope;
 	private SparseTokeniser tokens;
+	private HashMap<Character, ReaderMacro> readerMacros = new HashMap<>();
 
 	public Sparser(Scope scope, Symbols symbols) {
 		this.globalScope = scope;
@@ -33,7 +33,7 @@ public class Sparser
 	}
 
 	public Code parseString(String code) throws FileNotFoundException, IOException {
-		tokens = new SparseTokeniser(new StringReader(code + " "));
+		setReader(new StringReader(code + " "));
 		return parseCode();
 	}
 
@@ -43,7 +43,15 @@ public class Sparser
 	}
 
 	public void setReader(Reader source) throws IOException, FileNotFoundException {
-		tokens = new SparseTokeniser(source);
+		tokens = createTokeniser(source);
+	}
+	
+	private SparseTokeniser createTokeniser(Reader code) throws IOException,	FileNotFoundException {
+		SparseTokeniser tokeniser = new SparseTokeniser(code);
+		for (Character c : readerMacros.keySet()) {
+			tokeniser.addReaderMacroChar(c);
+		}
+		return tokeniser;
 	}
 	
     private Code parseCode()
@@ -101,13 +109,10 @@ public class Sparser
 	}
 
 	private Entity readerMacro(SparseToken token) {
-		switch (token.getToken()) {
-		case "'":
-			return new QuoteReaderMacro().call(this);
-		case "`":
-			return new BackquoteReaderMacro().call(this);
-		case ",":
-			return new CommaReaderMacro().call(this);
+		char readerMacroChar = token.getToken().charAt(0);
+		ReaderMacro macro = readerMacros.get(readerMacroChar);
+		if (macro != null) {
+			return macro.call(this);
 		}
 		
 		throw new SparseException("Unrecognised reader_macro " + token);
@@ -176,7 +181,9 @@ public class Sparser
 		}
 	}
 	
-	
+	public void addReaderMacro(char c, ReaderMacro readerMacro) {
+		readerMacros.put(c, readerMacro);
+	}
 }
 
 

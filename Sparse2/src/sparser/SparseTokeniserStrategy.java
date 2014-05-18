@@ -3,6 +3,9 @@
  */
 package sparser;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import Tokeniser.Token;
 import Tokeniser.TokeniserStrategy;
 
@@ -16,9 +19,12 @@ public class SparseTokeniserStrategy extends TokeniserStrategy {
 	private static final int COLLECTING_STRING = 5;
 	private static final int COLLECTING_COMMENT = 6;
 
+	private List<Character> readerMacroChars = new ArrayList<>();
+	
 	/* Holds the current state of the tokeniser */
 	private int state = NOT_COLLECTING_TOKEN;
 	private boolean readerMacro;
+	
 
 	public SparseTokeniserStrategy() {
 		setGoBack(0);
@@ -72,7 +78,7 @@ public class SparseTokeniserStrategy extends TokeniserStrategy {
 			state = COLLECTING_STRING;
 			append(c);
 			return false;
-		} else if(c == '\'' || c == '`' || c == ',') {
+		} else if(isReaderMacroChar(c)) {
 			state = NOT_COLLECTING_TOKEN;
 			readerMacro = true;
 			append(c);
@@ -85,6 +91,10 @@ public class SparseTokeniserStrategy extends TokeniserStrategy {
 			append(c);
 			return false;
 		}
+	}
+
+	private boolean isReaderMacroChar(char c) {
+		return readerMacroChars.contains(c);
 	}
 
 	private boolean handleCOLLECT_TOKEN(char c) {
@@ -130,5 +140,9 @@ public class SparseTokeniserStrategy extends TokeniserStrategy {
 		Token tok = new SparseToken(s, readerMacro);
 		readerMacro = false;
 		return tok;
+	}
+	
+	public void addReaderMacroChar(char c) {
+		readerMacroChars.add(c);
 	}
 }

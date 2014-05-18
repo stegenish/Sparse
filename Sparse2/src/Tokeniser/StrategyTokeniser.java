@@ -20,7 +20,7 @@ public class StrategyTokeniser implements Tokeniser
      * Any point where the strategy object is used is marked ***HOOK***
      * as a comment
      */
-    private TokeniserStrategy strategy;
+    protected TokeniserStrategy strategy;
 
 	private TokenGetter tokenGetter;
 

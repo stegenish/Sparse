@@ -7,9 +7,6 @@ import java.io.Reader;
 
 import sparser.Entity;
 import sparser.Environment;
-import sparser.Scope;
-import sparser.Sparser;
-import sparser.Symbols;
 
 public class SparseRepl {
 
