@@ -21,7 +21,7 @@ public class SparseList implements Entity, Iterable<Entity> {
 		next = node;
 	}
 	
-	private void element(Entity elem) {
+	public void element(Entity elem) {
 		element = elem;
 	}
 	
@@ -29,9 +29,15 @@ public class SparseList implements Entity, Iterable<Entity> {
 	}
 
 	@ExposedSparseFunction(name = "concat")
-	public SparseList concat(Entity list) {
-		if (list != SparseNull.theNull) {
-			return insertEnd((SparseList) list);
+	public SparseList concat(Entity entity) {
+		if (entity != SparseNull.theNull) {
+			if (this.isNil()) {
+				SparseList list = (SparseList) entity;
+				element = list.getFirstElement();
+				next((SparseList)list.rest());
+				return this;
+			}
+			return insertEnd((SparseList) entity);
 		}
 		return this;
 	}
@@ -86,7 +92,7 @@ public class SparseList implements Entity, Iterable<Entity> {
 		if (next == null) {
 			return element;
 		} else {
-			return next.last();
+			return next().last();
 		}
 	}
 

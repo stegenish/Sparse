@@ -208,8 +208,18 @@ public class SparserTest extends SparserTestCase
     	assertEquals(parseForm("(1 2 3 (a b c (11 22 33 44)))"), result);
     }
     
+    public void testBackquoteReaderMacro_List_SubSubAtList_Simple() throws Exception {
+    	Entity result = executeString("`(1 (a (,@(list 11))))");
+    	assertEquals(parseForm("(1 (a (11)))"), result);
+    }
+    
     public void testBackquoteReaderMacro_List_SubSubAtListWithSecondCommList() throws Exception {
-    	Entity result = executeString("`(1 2 3 (a b c (,@(list 11 22 33 44) ,(list \"a string\" \"string2\"))))");
-    	assertEquals(parseForm("(1 2 3 (a b c (11 22 33 44 (\"a string\" \"string2\"))))"), result);
+    	Entity result = executeString("`(1 (a (,@(list 11) ,(list \"a string\" \"string2\"))))");
+    	assertEquals(parseForm("(1 (a (11 (\"a string\" \"string2\"))))"), result);
+    }
+    
+    public void testBackquoteReaderMacro_List_SubSubAtListWithSecondAtList() throws Exception {
+    	Entity result = executeString("`(,@(list 11) ,(list 1 2) ,@(list 22))");
+    	assertEquals(parseForm("(11 (1 2) 22)"), result);
     }
 }

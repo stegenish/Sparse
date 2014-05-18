@@ -18,10 +18,15 @@ public class Defun extends SpecialForm {
 	
 	public Entity callImplementation(ArgumentList args, Scope scope) {
 		Symbol name = args.nextSymbol();
+		Callable userDefinedCallable = setupUserDefinedFunction(name, args, scope);
+		scope.moduleBind(name, userDefinedCallable);
+		return userDefinedCallable;
+	}
+
+	public UserDefinedFunction setupUserDefinedFunction(Symbol name, ArgumentList args, Scope scope) {
 		SparseList params = args.nextList();
 		Code code = createCode(args);
-		Callable userDefinedCallable = createUserDefinedCallable(name, params, code, scope);
-		scope.moduleBind(name, userDefinedCallable);
+		UserDefinedFunction userDefinedCallable = createUserDefinedCallable(name, params, code, scope);
 		return userDefinedCallable;
 	}
 	
@@ -33,7 +38,7 @@ public class Defun extends SpecialForm {
 		return code;
 	}
 
-	protected Callable createUserDefinedCallable(Symbol name, SparseList params, Code code, Scope scope) {
+	private UserDefinedFunction createUserDefinedCallable(Symbol name, SparseList params, Code code, Scope scope) {
 		return new UserDefinedFunction(name.toString(), params, code, scope.createLexicalScope());
 	}
 }

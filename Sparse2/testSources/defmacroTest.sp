@@ -1,13 +1,4 @@
-(import "sparseSource/defmacro.sp")
-
-(defspecial special ()
-	(list '+ 2 3))
-
-(defmacro macro ()
-	(let ((a 2))
-		(list '+ a 3)))
-
-(assert '(+ 2 3) (special) "special form")
-(assert 5 (eval (special)) "special form")
-(assert 5 (macro) "macro")
-
+(defmacro macro1 ()
+  '(+ a 1))
+  
+(assert 3 (let ((a 2)) (macro1)) "return value of macro should execute in callers scope")

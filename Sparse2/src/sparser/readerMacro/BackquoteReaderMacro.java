@@ -18,15 +18,17 @@ public class BackquoteReaderMacro extends ReaderMacro {
 
 	private Entity handleBackquotedList(SparseList listForm, Sparser sparser) {
 		SparseList newForm = new SparseList().append(sparser.getSymbol("list"));
+		boolean spliced = false;
 		for(Entity entity : listForm) {
 			if (entity instanceof SparseList) {
 				SparseList listEntity = (SparseList)entity;
 				if (isCommaMarked(listEntity)) {
 					Entity firstElement = getMarkedElement(listEntity);
-					newForm.append(firstElement);
+					newForm = append(newForm, firstElement, sparser);
 				} else if (isAtMarked(listEntity)) {
 					Entity firstElement = getMarkedElement(listEntity);
-					splice(newForm, firstElement, sparser);
+					newForm = splice(newForm, firstElement, sparser);
+					spliced = true;
 				} else {
 					newForm.append(handleBackquotedList(listEntity, sparser));
 				}
@@ -36,6 +38,13 @@ public class BackquoteReaderMacro extends ReaderMacro {
 		}
 		
 		return newForm;
+	}
+
+	private SparseList append(SparseList newForm, Entity firstElement, Sparser sparser) {
+		SparseList appendCall = new SparseList().append(sparser.getSymbol("append"));
+		appendCall.append(newForm).append(firstElement);
+		return appendCall;
+		//newForm.append(firstElement);
 	}
 
 	private Entity getMarkedElement(SparseList listEntity) {
@@ -51,7 +60,11 @@ public class BackquoteReaderMacro extends ReaderMacro {
 	}
 
 	private SparseList splice(SparseList newForm, Entity firstElement, Sparser sparser) {
-		return newForm.concat(firstElement.execute(sparser.globalScope));
+		SparseList list = new SparseList().append(sparser.getSymbol("concat"));
+		list.append(newForm);
+		SparseList spliced = list.append(firstElement);
+		return spliced;
+		//return newForm.concat(firstElement.execute(sparser.globalScope));
 	}
 
 }

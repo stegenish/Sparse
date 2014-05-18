@@ -18,6 +18,7 @@ import specialForms.AssertThrowsException;
 import specialForms.Bind;
 import specialForms.Boundp;
 import specialForms.DefSpecial;
+import specialForms.Defmacro;
 import specialForms.Defun;
 import specialForms.Eval;
 import specialForms.If;
@@ -62,6 +63,7 @@ public class Environment {
 		bindSymbol("isbound", new Boundp(), symbols, scope);
 		bindSymbol("export", new Export(), symbols, scope);
 		bindSymbol("quit", new Quit(), symbols, scope);
+		bindSymbol("defmacro", new Defmacro(), symbols, scope);
 		
 		exposeInternalTypes(symbols, scope);
 		

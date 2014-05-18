@@ -2,7 +2,6 @@
 ;   (eval (concat (list 'defspecial name params) (list 'eval body))))
 
 
-
 (defspecial defmacro (name params (rest body))
   (let ((new-body (list))
 	(remaining body))
