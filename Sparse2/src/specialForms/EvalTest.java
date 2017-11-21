@@ -1,17 +1,18 @@
 package specialForms;
 
+import static org.junit.Assert.assertEquals;
+
+import org.junit.Test;
+
 import sparser.ArgumentList;
-import sparser.Entity;
 import sparser.Callable;
+import sparser.Entity;
 import sparser.SparseInt;
-import sparser.SparserTestCase;
+import tests.SparserTestCase;
 
 public class EvalTest extends SparserTestCase {
-	
-	public EvalTest(String testName) {
-		super(testName);
-	}
 
+	@Test
 	public void testEvalReturnExecuteValueOfArgument() throws Exception {
 		Callable eval = new Eval();
 		ArgumentList args = ArgumentList.createArgumentList();

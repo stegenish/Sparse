@@ -6,3 +6,4 @@
       (concat (list (fun this-element))
 	          (map remaining fun)))))
   
+(export map)

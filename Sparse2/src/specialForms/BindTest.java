@@ -1,17 +1,18 @@
 package specialForms;
 
+import static org.junit.Assert.assertEquals;
+
+import org.junit.Test;
+
 import sparser.ArgumentList;
 import sparser.Callable;
 import sparser.SparseInt;
-import sparser.SparserTestCase;
 import sparser.Symbol;
+import tests.SparserTestCase;
 
 public class BindTest extends SparserTestCase {
 
-	public BindTest(String testName) {
-		super(testName);
-	}
-
+	@Test
 	public void testBind() throws Exception {
 		Callable bind = new Bind(globalScope);
 		ArgumentList args = ArgumentList.createArgumentList();

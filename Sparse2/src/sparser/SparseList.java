@@ -21,7 +21,7 @@ public class SparseList implements Entity, Iterable<Entity> {
 		next = node;
 	}
 	
-	private void element(Entity elem) {
+	public void element(Entity elem) {
 		element = elem;
 	}
 	
@@ -29,9 +29,15 @@ public class SparseList implements Entity, Iterable<Entity> {
 	}
 
 	@ExposedSparseFunction(name = "concat")
-	public SparseList concat(Entity list) {
-		if (list != SparseNull.theNull) {
-			return insertEnd((SparseList) list);
+	public SparseList concat(Entity entity) {
+		if (entity != SparseNull.theNull) {
+			if (this.isNil()) {
+				SparseList list = (SparseList) entity;
+				element = list.getFirstElement();
+				next((SparseList)list.rest());
+				return this;
+			}
+			return insertEnd((SparseList) entity);
 		}
 		return this;
 	}
@@ -46,7 +52,7 @@ public class SparseList implements Entity, Iterable<Entity> {
 	}
 
 	@ExposedSparseFunction(name = "append")
-	public void append(Entity elem) {
+	public SparseList append(Entity elem) {
 		if(element() == SparseNull.theNull) {
     		element(elem);
     	} else if(next() == null) {
@@ -55,11 +61,18 @@ public class SparseList implements Entity, Iterable<Entity> {
     	} else {
     		next().append(elem);
     	}
+		
+		return this;
 	}
 
 	@ExposedSparseFunction(name = "first")
 	public Entity getFirstElement() {
 		return element();
+	}
+	
+	@ExposedSparseFunction(name = "second")
+	public Entity getSecondElement() {
+		return next().element();
 	}
 	
 	@ExposedSparseFunction(name = "rest")
@@ -73,6 +86,15 @@ public class SparseList implements Entity, Iterable<Entity> {
 		}
 		return sparseList;
 	}
+	
+	@ExposedSparseFunction(name = "last")
+	public Entity last() {
+		if (next == null) {
+			return element;
+		} else {
+			return next().last();
+		}
+	}
 
 	public Iterator<Entity> iterator() {
 		return new SparseListIterator(this);
@@ -84,6 +106,11 @@ public class SparseList implements Entity, Iterable<Entity> {
 
 	@ExposedSparseFunction(name = "empty")
 	public SparseBoolean isEmpty() {
+		return toSparseBoolean(isNil());
+	}
+	
+	@ExposedSparseFunction(name = "is-nil")
+	public SparseBoolean sparseIsNil() {
 		return toSparseBoolean(isNil());
 	}
 	

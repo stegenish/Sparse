@@ -37,12 +37,11 @@ public class SparseSourceRunner {
 		return fileBuffer;
 	}
 
-	public void run() {
-		Scope scope = new Scope();
-		Sparser parser = new Sparser(scope);
-		Code code = parser.parseString(source);
+	public void run() throws FileNotFoundException, IOException {
+		Environment environment = new Environment();
+		Code code = environment.sparser.parseString(source);
 		try {
-			code.execute(scope);
+			code.execute(environment.scope);
 		} catch (SparseException e) {
 			System.err.println("Exception thrown and not caught:");
 			System.err.println(e.getMessage());

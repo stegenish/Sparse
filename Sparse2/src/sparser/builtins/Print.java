@@ -14,11 +14,12 @@ public class Print extends Function {
 
 	@Override
 	public Entity callImplementation(ArgumentList args, Scope scope) {
+		Entity next = SparseNull.theNull;
 		while(args.hasNext()) {
-			Entity next = args.next();
+			next = args.next();
 			System.out.print(next.toString());
 		}
 		System.out.println();
-		return SparseNull.theNull;
+		return next;
 	}
 }

@@ -1,6 +1,5 @@
 package sparser;
 
-import junit.framework.Assert;
 import junit.framework.TestCase;
 
 public class SymbolTest extends TestCase {
@@ -14,6 +13,6 @@ public class SymbolTest extends TestCase {
 		} catch (SparseException se) {
 			expectedException = se;
 		}
-		Assert.assertEquals("Symbol not bound ab", expectedException.getMessage());
+		assertEquals("Symbol not bound: ab", expectedException.getMessage());
 	}
 }

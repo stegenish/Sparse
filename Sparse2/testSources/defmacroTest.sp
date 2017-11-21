@@ -1,11 +1,4 @@
-(import "sparseSource/defmacro.sp")
-
-(defun toTest () "global defun")
-   
-(defmacro testmacro ()
-    (bind 43 a)
-    (defun toTest () "defmacro defun"))
-    
-(testmacro)
-(assert "defmacro defun" (toTest))
-(assert 43 a)
+(defmacro macro1 ()
+  '(+ a 1))
+  
+(assert 3 (let ((a 2)) (macro1)) "return value of macro should execute in callers scope")

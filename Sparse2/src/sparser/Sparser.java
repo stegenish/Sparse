@@ -6,24 +6,14 @@
 
 package sparser;
 
-import java.lang.annotation.Annotation;
-import java.lang.reflect.Method;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.Reader;
+import java.io.StringReader;
+import java.util.HashMap;
 
-import sparser.builtins.Add;
-import sparser.builtins.AssertEquals;
 import sparser.builtins.Import;
-import sparser.builtins.List;
-import sparser.builtins.Multiply;
-import sparser.builtins.Print;
-import sparser.builtins.Subtract;
-import specialForms.Bind;
-import specialForms.Boundp;
-import specialForms.DefSpecial;
-import specialForms.Defun;
-import specialForms.Eval;
-import specialForms.If;
-import specialForms.Let;
-import specialForms.Quote;
+import sparser.readerMacro.ReaderMacro;
 
 /**
   * @author  Administrator
@@ -31,67 +21,60 @@ import specialForms.Quote;
   */
 public class Sparser
 {
-    private Symbols symbols = new Symbols();
-	private Scope globalScope;
+    private Symbols symbols;
+	public Scope globalScope;
 	private SparseTokeniser tokens;
+	private HashMap<Character, ReaderMacro> readerMacros = new HashMap<>();
 
-	public Sparser(Scope scope) {
+	public Sparser(Scope scope, Symbols symbols) {
 		this.globalScope = scope;
-		initialBindings(globalScope);
+		this.symbols = symbols;
+		scope.bind(getSymbol("import"), new Import(this));
 	}
 
-	private void initialBindings(Scope scope) {
-		bindSymbol("assert", new AssertEquals(), scope);
-		bindSymbol("add", new Add(), scope);
-		bindSymbol("+", new Add(), scope);
-		bindSymbol("-", new Subtract(), scope);
-		bindSymbol("bind", new Bind(scope), scope);
-		bindSymbol("defun", new Defun(), scope);
-		bindSymbol("defspecial", new DefSpecial(), scope);
-		bindSymbol("multiply", new Multiply(), scope);
-		bindSymbol("*", new Multiply(), scope);
-		bindSymbol("print", new Print(), scope);
-		bindSymbol("quote", new Quote(), scope);
-		bindSymbol("if", new If(), scope);
-		bindSymbol("true", SparseBoolean.True, scope);
-		bindSymbol("false", SparseBoolean.False, scope);
-		bindSymbol("if", new If(), scope);
-		bindSymbol("let", new Let(), scope);
-		bindSymbol("list", new List(), scope);
-		bindSymbol("eval", new Eval(), scope);
-		bindSymbol("while", new While(), scope);
-		bindSymbol("null", SparseNull.theNull, scope);
-		bindSymbol("import", new Import(this), scope);
-		bindSymbol("isbound", new Boundp(), scope);
-		
-		exposeType(SparseList.class);
-		exposeType(SparseInt.class);
-		exposeType(Entity.class);
-	}
-	
-	public void bindSymbol(String string, Entity entity, Scope scope) {
-		String str = new SparseToken(string, false).getToken();
-		scope.bind(symbols.getSymbol(str), entity);
-	}
-
-	public Code parseString(String code) {
-		tokens = new SparseTokeniser(code);
+	public Code parseString(String code) throws FileNotFoundException, IOException {
+		setReader(new StringReader(code + " "));
 		return parseCode();
 	}
 
+	public Code parseReader(Reader source) throws FileNotFoundException, IOException {
+		setReader(source);
+		return parseCode();
+	}
+
+	public void setReader(Reader source) throws IOException, FileNotFoundException {
+		tokens = createTokeniser(source);
+	}
+	
+	private SparseTokeniser createTokeniser(Reader code) throws IOException,	FileNotFoundException {
+		SparseTokeniser tokeniser = new SparseTokeniser(code);
+		for (Character c : readerMacros.keySet()) {
+			tokeniser.addReaderMacroChar(c);
+		}
+		return tokeniser;
+	}
+	
     private Code parseCode()
     {
     	Code code = new Code();
-    	while(tokens.hasMore()) {
-    		Entity entity = parseNextForm(true);
-    		code.appendEntity(entity);
-    	}
+    	Entity entity = null;
+    	do {
+    		 entity = parseNextForm(true);
+    		 if (entity != null) {
+    			 code.appendEntity(entity);
+    		 }
+    	} while (entity != null);
+    	
         return code;
     }
 
 	public Entity parseNextForm(boolean canEnd) {
 		
 		SparseToken token = nextToken(canEnd);
+		if (token == null) {
+			return null;
+		}
+		
 		Entity entity;
 		switch(token.getType())
 		{
@@ -111,12 +94,13 @@ public class Sparser
 		    	entity = parseString(token);
 		        break;
 		    case SparseToken.READER_MACRO:
-		    	entity = readerMacro();
+		    	entity = readerMacro(token);
 		    	break;
 		    default:
 		        throw new SyntaxErrorException(token, "Unexpected token. " +
 		                            "Expected a list, symbol or string");
 		}
+		
 		return entity;
 	}
 
@@ -124,11 +108,14 @@ public class Sparser
 		return new SparseInt(token.getToken());
 	}
 
-	private Entity readerMacro() {
-		SparseList sparseList = new SparseList();
-		sparseList.append(getSymbol("quote"));
-		sparseList.append(parseNextForm(false));
-		return sparseList;
+	private Entity readerMacro(SparseToken token) {
+		char readerMacroChar = token.getToken().charAt(0);
+		ReaderMacro macro = readerMacros.get(readerMacroChar);
+		if (macro != null) {
+			return macro.call(this);
+		}
+		
+		throw new SparseException("Unrecognised reader_macro " + token);
 	}
 
 	private SparseList parseList()
@@ -180,19 +167,24 @@ public class Sparser
 	public Symbol getSymbol(String symName) {
 		return symbols.getSymbol(symName);
 	}
+	
+	public int nextChar() throws IOException {
+		return tokens.getTokenGetter().nextChar();
+	}
 
-	public void exposeType(Class<? extends Entity> type) {
-		Method[] methods = type.getMethods();
-		for (Method method : methods) {
-			Annotation[] declaredAnnotations = method.getDeclaredAnnotations();
-			for (int i = 0; i < declaredAnnotations.length; i++) {
-				Annotation annotation = declaredAnnotations[i];
-				if(annotation instanceof ExposedSparseFunction) {
-					ExposedSparseFunction exposedFunction = (ExposedSparseFunction) annotation;
-					bindSymbol(exposedFunction.name(), new ExposedFunction(exposedFunction, method), globalScope);
-				}
-			}
+	public void goBackChar(int n) {
+		tokens.setGoBack(n);
+		try {
+			tokens.getTokenGetter().handleGoBack();
+		} catch (IOException e) {
+			throw new SparseException("Parser error, cannot handle go back", e);
 		}
 	}
+	
+	public void addReaderMacro(char c, ReaderMacro readerMacro) {
+		readerMacros.put(c, readerMacro);
+	}
 }
+
+
 

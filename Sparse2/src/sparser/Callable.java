@@ -10,12 +10,10 @@ public abstract class Callable implements Entity
 {
 	private String name;
 	private ArgumentSemantics argumentProcessor;
-	protected ScopeSemantics scopeSemantics;
 
-	public Callable(String name, ArgumentSemantics argumentProcessor, ScopeSemantics scopeSemantics) {
+	public Callable(String name, ArgumentSemantics argumentProcessor) {
 		this.name = name;
-		this.argumentProcessor = argumentProcessor;
-		this.scopeSemantics = scopeSemantics;
+		this.argumentProcessor = argumentProcessor;;
 	}
 
     public Entity execute(Scope scope) {
@@ -37,9 +35,7 @@ public abstract class Callable implements Entity
 
 	private Entity call(ArgumentList args, Scope scope) {
 		ArgumentList processedArguments = argumentProcessor.processArguments(args, scope);
-		//processedArguments.dump();
-		Scope newScope = scopeSemantics.createNewScope(scope);
-		Entity returnValue = callImplementation(processedArguments, newScope);
+		Entity returnValue = callImplementation(processedArguments, scope);
 		return returnValue;
 	}
 

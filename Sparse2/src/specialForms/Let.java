@@ -26,7 +26,7 @@ public class Let extends SpecialForm {
 	}
 
 	private Scope createLetScope(Scope scope, SparseList bindingList) {
-		Scope letScope = scope.createShadowScope();
+		Scope letScope = scope.createLexicalScope();
 		for(Entity entity : bindingList) {
 			if(entity instanceof SparseList) {
 				SparseList binding = (SparseList) entity;
