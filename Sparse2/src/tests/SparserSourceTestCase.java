@@ -6,9 +6,8 @@ import java.io.FileReader;
 import java.io.IOException;
 
 import sparser.SparseSourceRunner;
-import junit.framework.TestCase;
 
-public abstract class SparserSourceTestCase extends TestCase {
+public abstract class SparserSourceTestCase {
 
 	protected void run(String string) throws FileNotFoundException {
 		String filePath = "testSources/" + string;

@@ -8,32 +8,19 @@
 package tests;
 
 import sparser.*;
+import static org.junit.Assert.*;
 
-import junit.framework.*;
+import org.junit.Test;
+
 
 /**
  *
  * @author Administrator
  */
-public class ArgumentListTest extends SparserTestCase
+public class ArgumentListTest
 {
 
-    public ArgumentListTest(java.lang.String testName)
-    {
-        super(testName);
-    }
-
-    public static Test suite()
-    {
-        TestSuite suite = new TestSuite(ArgumentListTest.class);
-        return suite;
-    }
-
-    public static void main(String args[])
-    {
-        junit.textui.TestRunner.run(ArgumentListTest.class);
-    }
-
+	@Test
     public void test1()
     {
         ArgumentList args = ArgumentList.createArgumentList();

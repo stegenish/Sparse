@@ -1,11 +1,14 @@
 package sparser;
 
+import static org.junit.Assert.assertEquals;
+
 import java.util.Iterator;
 
-import junit.framework.TestCase;
+import org.junit.Test;
 
-public class SparseListTest extends TestCase {
-
+public class SparseListTest {
+    
+	@Test
 	public void testIterator() throws Exception {
 		SparseList list = new SparseList();
 		list.append(SparseInt.valueOf(1));
@@ -19,14 +22,16 @@ public class SparseListTest extends TestCase {
 			expected++;
 		}
 	}
-
+    
+	@Test
 	public void testgetFirstElementForSingleElementList() throws Exception {
 		SparseList list = new SparseList();
 		list.append(SparseInt.valueOf(2));
 		Entity firstElement = list.getFirstElement();
 		assertEquals(SparseInt.valueOf(2), firstElement);
 	}
-
+    
+	@Test
 	public void testgetFirstElementFormultipleElementList() throws Exception {
 		SparseList list = new SparseList();
 		list.append(SparseInt.valueOf(2));
@@ -35,7 +40,8 @@ public class SparseListTest extends TestCase {
 		Entity firstElement = list.getFirstElement();
 		assertEquals(SparseInt.valueOf(2), firstElement);
 	}
-	
+    
+	@Test
 	public void testEmptyListPrintsProperly() throws Exception {
 		assertEquals("()", new SparseList().createString());
 		

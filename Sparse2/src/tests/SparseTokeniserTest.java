@@ -1,12 +1,17 @@
 package tests;
 
-import junit.framework.TestCase;
-import sparser.*;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.StringReader;
+import java.util.Vector;
 
-import java.util.*;
-import java.io.*;
+import org.junit.Before;
+import org.junit.Test;
 
 import Tokeniser.Token;
+import junit.framework.TestCase;
+import sparser.SparseTokeniser;
 
 /*
  * Created on Aug 6, 2004
@@ -21,24 +26,9 @@ public class SparseTokeniserTest extends TestCase
 
     private SparseTokeniser        toks;
     private Vector<String>         answers;
-    /**
-     * Constructor for SparseTokeniserTest.
-     * @param arg0
-     */
-    public SparseTokeniserTest(String arg0)
-    {
-        super(arg0);
-    }
 
-    public static void main(String[] args)
-    {
-        junit.textui.TestRunner.run(SparseTokeniserTest.class);
-    }
-
-        /*
-         * @see TestCase#setUp()
-         */
-    protected void setUp() throws Exception
+    @Before
+    public void setUp() throws Exception
     {
         super.setUp();
         String line;
@@ -69,6 +59,7 @@ public class SparseTokeniserTest extends TestCase
 		file2.close();
     }
 
+    @Test
     public void testNext()
     {
         int i = 0;
@@ -78,4 +69,15 @@ public class SparseTokeniserTest extends TestCase
 			assertEquals(answers.get(i++), next.getToken());
         }
     }
+
+	@Test
+	public void testWithSingleQuote() throws Exception {
+		SparseTokeniser tokeniser = new SparseTokeniser(new StringReader(" ' asd (''xcv) "));
+		assertEquals("'", tokeniser.next().getToken());
+		assertEquals("asd", tokeniser.next().getToken());
+		assertEquals("(", tokeniser.next().getToken());
+		assertEquals("'", tokeniser.next().getToken());
+		assertEquals("'xcv", tokeniser.next().getToken());
+		assertEquals(")", tokeniser.next().getToken());
+	}
 }

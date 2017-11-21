@@ -1,16 +1,18 @@
 package specialForms;
 
+import static org.junit.Assert.assertEquals;
+
+import org.junit.Test;
+
 import sparser.Entity;
 import sparser.SparseInt;
 import sparser.SparseList;
-import sparser.SparserTestCase;
+import tests.SparserTestCase;
 
 public class QuoteTest extends SparserTestCase {
 
-	public QuoteTest(String testName) {
-		super(testName);
-	}
 
+	@Test
 	public void testQuote() throws Exception {
 		Entity code = parseEntity("(quote (1 2 3))");
 		SparseList list = (SparseList) code.execute(globalScope);

@@ -1,23 +1,26 @@
 package specialForms;
 
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
 import java.io.FileNotFoundException;
 import java.io.IOException;
+
+import org.junit.Test;
 
 import sparser.ArgumentList;
 import sparser.Callable;
 import sparser.Entity;
 import sparser.SparseList;
-import sparser.SparserTestCase;
 import sparser.Symbol;
 import sparser.UserDefinedFunction;
+import tests.SparserTestCase;
 
 public class DefunTest extends SparserTestCase {
 
-	public DefunTest(String testName) {
-		super(testName);
-	}
 
+	@Test
 	public void testEmptyFunction() throws Exception {
 		Defun defun = new Defun();
 		ArgumentList args = ArgumentList.createArgumentList();
@@ -27,6 +30,7 @@ public class DefunTest extends SparserTestCase {
 		assertTrue(call instanceof UserDefinedFunction);
 	}
 
+	@Test
 	public void testSimpleFunction() throws Exception {
 		String program = "(defun funcName () (test 1 2 3 4 5)(test 3 a))";
 		Callable func = parseFunction(program);
@@ -40,6 +44,7 @@ public class DefunTest extends SparserTestCase {
 		assertEquals(2, testSpecialForm.callHistory.size());
 	}
 
+	@Test
 	public void testFunctionWithParameters() throws Exception {
 		String program = "(defun adder (a b) (testFun (add a b)))";
 		Callable func = parseFunction(program);
@@ -49,15 +54,18 @@ public class DefunTest extends SparserTestCase {
 		func.callWithScope(passedArgs, scope);
 		assertEquals(sparseInt("9"), testFunction.lastCallArgs.next());
 	}
-	
+
+	@Test
 	public void testSecondArgumentMustBeSymbol() throws Exception {
 		checkIncorrectArgument("(defun \"asd\" () null)", "argument 1");
 	}
-	
+
+	@Test
 	public void testSecondArgumentCannotBeNumber() throws Exception {
 		checkIncorrectArgument("(defun 1 () null)", "argument 1");
 	}
-	
+
+	@Test
 	public void testThirdArgumentMustBeList() throws Exception {
 		checkIncorrectArgument("(defun name asd null)", "argument 2");
 	}
